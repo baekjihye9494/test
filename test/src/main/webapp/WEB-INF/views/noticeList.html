@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>notice List</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+	<button id="btn">JSON파일 비동기 요청</button>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>no</th>
+				<th>name</th>
+			</tr>
+		</thead>
+		<tbody id="noticeList">
+		</tbody>
+	</table>
+</body>
+<script>
+
+
+$('#btn').click(function() {
+	$.ajax({
+		url : '/notice/noticeList',
+		type : 'post',
+		success : function(json) { // 매개변수 : 응답된 문자열 -> jquery api에서 자바스크립트 객체 변경
+			// alert(json);
+			
+			$('#noticeList').empty();
+			
+			$(json).each(function(index, item){
+				let html = '';
+				html += '<tr>'
+				html += 	'<td>'+item.no+'</td>';
+				html += 	'<td>'+item.name+'</td>';\
+				html += '</tr>'
+				$('#noticeList').append(html);
+			}); 
+		},
+		error : function(err) {
+			alert('실패!');
+			console.log(err);
+		}
+	});
+});
+</script>
+</html>
