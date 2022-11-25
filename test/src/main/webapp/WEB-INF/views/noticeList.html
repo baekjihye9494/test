@@ -25,23 +25,11 @@ $('#btn').click(function() {
 	$.ajax({
 		url : '/notice/noticeList',
 		type : 'post',
-		success : function(json) { // 매개변수 : 응답된 문자열 -> jquery api에서 자바스크립트 객체 변경
-			// alert(json);
+		data : {no,1},
+		success : function(data) { // 매개변수 : 응답된 문자열 -> jquery api에서 자바스크립트 객체 변경
 			
-			$('#noticeList').empty();
-			
-			$(json).each(function(index, item){
-				let html = '';
-				html += '<tr>'
-				html += 	'<td>'+item.no+'</td>';
-				html += 	'<td>'+item.name+'</td>';\
-				html += '</tr>'
-				$('#noticeList').append(html);
-			}); 
-		},
-		error : function(err) {
-			alert('실패!');
-			console.log(err);
+			alert('성공!');
+			console.log(data.no);
 		}
 	});
 });

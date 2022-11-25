@@ -22,10 +22,9 @@ public class TestController {
 	public String testList(Model model) throws Exception {
 
 		String test =  String.valueOf(testService.selectTest());
-
 	    logger.info(test);
-
+	    
 	    return test;
 	}
-	
+	    	
 }

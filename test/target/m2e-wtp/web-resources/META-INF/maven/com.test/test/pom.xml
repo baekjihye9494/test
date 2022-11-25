@@ -123,6 +123,12 @@
 		    <scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-servlet-api</artifactId>
+			<version>9.0.26</version>
+		</dependency>
+		<!-- Thanks for using https://jar-download.com -->
+		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.2</version>
