@@ -1,5 +1,8 @@
 package com.test.sample.work.service;
 
-public class WorkService {
+import org.springframework.stereotype.Service;
+
+@Service
+public interface WorkService {
 
 }

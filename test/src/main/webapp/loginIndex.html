@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<title>Home</title>
+<body>
+	<h1>로그인</h1>
+	<div class="row">
+		<div class="col-lg-6">
+			<table>
+				<tr>
+					<td>ID</td>
+					<td><input type="text" name="memberId" id="memberId"></td>
+				</tr>
+				<tr>
+					<td>PW</td>
+					<td><input type="password" name="memberPass" id="memberPass"></td>
+				</tr>
+			</table>
+			<button onclick="loginCk()" id="loginBtn">로그인</button>
+			<a href="/addMember.html">회원가입</a>
+			</form>
+		</div>
+	</div>
+	</div>
+
+</body>
+</html>
+<script>
+	function loginCk() {
+		$('#loginBtn').click(function() {
+			if ($('#memberId').val('')) {
+				alert('아이디를 입력하세요');
+			} else {
+				$.ajax({
+					type : 'get',
+					url : "notice/test.ajax",
+					data : {},
+					dataType : 'JSON',
+					success : function(data) {
+						console.log(data.test);
+						console.log('success!');
+						location.href = "noticeList.html";
+					},
+					error : function(e) {
+						console.log(e);
+						location.href = "addMember.html";
+					}
+				});
+			}
+		});
+	};
+</script>

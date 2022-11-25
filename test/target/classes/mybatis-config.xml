@@ -8,6 +8,5 @@
 	
 	<typeAliases>
 		<typeAlias alias="testVO" type="com.test.sample.vo.TestVO"/>
-		<typeAlias alias="noticeVO" type="com.test.sample.vo.NoticeVO"/>
 	</typeAliases>
 </configuration>

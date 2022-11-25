@@ -16,7 +16,7 @@ public class TestServiceImpl implements TestService {
 
 	@Override
 	@Transactional
-	public String selectTest() throws Exception {
+	public String test() throws Exception {
 		return testDao.selectTest();
 	}
 
