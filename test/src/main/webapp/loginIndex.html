@@ -1,54 +1,103 @@
-<!DOCTYPE html>
+<!DOCTYPE  >
 <html>
 <head>
-<meta charset="UTF-8">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<title>Home</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>login.html</title>
+ 
+<script src="http://code.jquery.com/jquery-3.1.0.js">
+    
+</script>
+ 
+ 
+<script>
+    $(document).ready(function() {
+ 
+        
+        alert("뭐잉?");
+        
+        $("#btnLogin").click(function() {
+ 
+            var memberId = $("#memberId").val();
+            var memberPw = $("#memberPw").val();
+ 
+            if (memberId == "") {
+ 
+                alert("아이디를 입력해주세요");
+                $("#memberId").focus();
+                return;
+            }
+ 
+//$반복 var exp = /[a-z0-9]$/; //영문자와 숫자 //정규표현식. test(입력값) 규칙에 맞으면 true if(!exp.test(userid)){ alert("영문자와 숫자만 입력가능합니다."); $("#userid").focus(); return; }
+ 
+            if (memberPw == "") {
+ 
+                alert("비밀번호를 입력해주세요");
+ 
+                $("#memberPw").focus();
+                return;
+            }
+ 
+            //비동기 ajax 방식으로 데이터 주고 받기 방버버
+ 
+            var data =  {"memberId":memberId, "memberPass":memberPass}
+ 
+            alert(memberId+memberPw);
+            
+            $.ajax({
+                
+                type : "post",
+                data : data,
+                url : "/work/login.do",
+                success : function(value) {
+ 
+                    $("#result").html(value);
+ 
+                }
+ 
+            });
+ 
+            /*             
+             document.form1.action=""
+             document.from1.submit();
+             */
+        });
+ 
+    });
+</script>
+ 
+ 
+</head>
 <body>
-	<h1>로그인</h1>
-	<div class="row">
-		<div class="col-lg-6">
-			<table>
-				<tr>
-					<td>ID</td>
-					<td><input type="text" name="memberId" id="memberId"></td>
-				</tr>
-				<tr>
-					<td>PW</td>
-					<td><input type="password" name="memberPass" id="memberPass"></td>
-				</tr>
-			</table>
-			<button onclick="loginCk()" id="loginBtn">로그인</button>
-			<a href="/addMember.html">회원가입</a>
-			</form>
-		</div>
-	</div>
-	</div>
-
+ 
+ 
+    <table border="1">
+ 
+ 
+ 
+        <tr>
+            <td>아이디</td>
+            <td><input type="text" id="memberId"></td>
+        </tr>
+ 
+        <tr>
+            <td>비밀번호</td>
+            <td><input type="password" id="ememberPw"></td>
+        </tr>
+ 
+ 
+ 
+        <tr>
+            <td colspan="2" align="center"><input type="button" 
+            value="로그인" id="btnLogin">로그인</td>
+        </tr>
+ 
+ 
+ 
+ 
+    </table>
+    <div id="result">로그인 결과 출력 영역</div>
+ 
+ 
+ 
 </body>
 </html>
-<script>
-	function loginCk() {
-		$('#loginBtn').click(function() {
-			if ($('#memberId').val('')) {
-				alert('아이디를 입력하세요');
-			} else {
-				$.ajax({
-					type : 'get',
-					url : "notice/test.ajax",
-					data : {},
-					dataType : 'JSON',
-					success : function(data) {
-						console.log(data.test);
-						console.log('success!');
-						location.href = "noticeList.html";
-					},
-					error : function(e) {
-						console.log(e);
-						location.href = "addMember.html";
-					}
-				});
-			}
-		});
-	};
-</script>

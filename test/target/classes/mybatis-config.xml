@@ -6,7 +6,19 @@
 		<setting name="mapUnderscoreToCamelCase" value="true"/>
 	</settings>
 	
-	<typeAliases>
-		<typeAlias alias="testVO" type="com.test.sample.vo.TestVO"/>
+ 	<typeAliases>
+		<typeAlias alias="authorityVO" type="com.test.sample.vo.AuthorityVO"/>
+		<typeAlias alias="companyVO" type="com.test.sample.vo.CompanyVO"/>
+		<typeAlias alias="confirmVO" type="com.test.sample.vo.ConfirmVO"/>
+		<typeAlias alias="memberVO" type="com.test.sample.vo.MemberVO"/>
+		<typeAlias alias="siteVO" type="com.test.sample.vo.SiteVO"/>
+		<typeAlias alias="usersiteVO" type="com.test.sample.vo.UsersiteVO"/>	
+		<typeAlias alias="workVO" type="com.test.sample.vo.W‭orkVO"/>
 	</typeAliases>
+	
+	
+	<!--  <typeAliases>
+        
+        <package name="com.test.sample"/>
+    </typeAliases> -->
 </configuration>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.test.sample.dao.WorkDAO">
+
+	<select id="selectWorkList" resultType="map"> 
+		select 
+		    w.work_no workNo,
+		    w.work_location workLocation,
+		    w.work_people workPeople,
+		    w.work_kind workKind,
+		    m.member_code memberCode,
+		    s.site_code siteCode,
+		    c.confirm_code confirmCode
+		from
+			work w, member m, site s, confirm c
+		where 
+			m.member_code = w.member_code
+		AND w.site_code = s.site_code
+		AND w.confirm_code = c.confirm_code
+
+	</select>
+	
+</mapper>

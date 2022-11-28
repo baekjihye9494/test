@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>조출,야간작업 신청</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div>
+                <div>
+                    <label>현장명</label>
+                    <input type="hidden" class="form-control" id="siteCode" name="siteCode">
+                    <input type="text" id="siteName" name="siteName" class="form-control" readonly="readonly">
+                </div>
+
+                <div>
+                    <label for="workKind">신청구분</label>
+                    <select id="workKind">
+                        <option value="">[-- 전체 --]</option>
+                        <option value="조출">조촐</option>
+                        <option value="야간">야간</option>
+                        <option value="위험">위험</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="confirmSt">승인상태</label>
+                    <select id="confirmSt">
+                        <option value="">[-- 전체 --]</option>
+                        <option value="대기">대기</option>
+                        <option value="승인">승인</option>
+                        <option value="반려">반려</option>
+                        <option value="취소">취소</option>
+                        
+                    </select>
+                </div>
+                <div>
+                    <label for="companyCode">공사업체</label>
+                    <select id="companyCode">
+                        <option value="">[-- 전체 --]</option>
+                        <option value="">(주)대림</option>
+                        <option value="">디엘이엔씨</option>
+                        <option value="">(주)우노텍</option>
+                        <option value="">(주)선보건업</option>
+                        <option value="">(주)금종산업</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="memberName">근로자명</label>
+                    <input type="text"id="memberName" name="memberName_work">
+                </div>
+                <div>
+                    <label for="dateIn">작업기간</label>
+                    <input id="dateIn" name="dateIn" placeholder="시작일자" data-provide="datepicker">
+                    <div>~</div>
+                    <input id="dateEndIn" name="dateEndIn" placeholder="종료일자" data-provide="datepicker">
+                </div>
+                <button type="button" id="dateInSerch">조회</button>
+            </div>
+		</div>
+    </div>
+</body>
+</html>
+      

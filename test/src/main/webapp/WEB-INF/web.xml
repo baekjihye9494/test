@@ -5,10 +5,9 @@
 
 	
 		<!-- 시작 페이지를 html로 설정 한 뒤 컨트롤러 실행 -->
-	<welcome-file-list>
+ 	<welcome-file-list>
 		<welcome-file>/loginIndex.html</welcome-file>
 	</welcome-file-list>
-
 
 	<!-- 서버가 켜지면 가장 먼저 읽게되는 파일 -->
 
