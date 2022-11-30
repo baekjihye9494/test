@@ -16,5 +16,7 @@ public class MemberVO {
 	 * memberCode = 2022부터 01씩 증가
 	 * 
 	 */
+	
+	
 
 }

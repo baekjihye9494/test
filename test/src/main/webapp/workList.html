@@ -2,65 +2,151 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<title>조출,야간작업승인</title>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script>
+$(document).ready(function(){
+	$('#userSiteName').change(function() {
+		// alert('regionId change');
+		// ajax호출 -> 값 -> countryId select append
 
-<title>조출,야간작업 신청</title>
+			$.ajax({
+				url : '/work/userSiteName.ajax',
+				type : 'get',
+				data : {
+					'site_name' : site_name
+					},
+				success : function(data) {
+					console.log(data);
+				}
+			});
+		});
+		
+	
+	function getWorkBtn() {
+		
+		var workData = "";
+		consol.log(workData);
+		
+			$('#selectWorkList').empty(); //신청현황 리스트
+					
+					$(workData).each(function(index, item){
+						let html = '';
+						html += '<tr>'
+						html += 	'<td>'+item.workNo+'</td>';
+						html += 	'<td>'+item.memberName+'</td>';	
+						html += 	'<td>'+item.workKind+'</td>';	
+						html += 	'<td>'+item.workLocation+'</td>';		
+						html += 	'<td>'+item.workPeople+'</td>';	
+						html += 	'<td>'+item.workStartDate+'</td>';	
+						html += 	'<td>'+item.workEndDate+'</td>';
+						html += '</tr>'
+						$('#memberList').append(html);
+					
+			});
+		}
+	
+	function addWorkBtn() {
+		var member_id = $('#member_id').val();
+	    var site_name = $('#site_name').val();
+	    var site_code = $('#site_code').val();
+	    console.log(member_id);
+	    console.log(site_name);
+	    console.log(site_code);
+	    
+	    if(member_id != 'member_id' && site_code != 'site_code'){
+	        alert("신청권한이 없습니다. 관리자에게 문의하세요");
+            location.reload();
+	    }else{
+	        
+	        $.ajax({
+	                type:'post',
+	                url:"work/addWork.ajax",
+	                data:{
+	                    'member_id' : member_id,
+	                    'site_name' : site_name,
+	                    'site_code' : site_code
+	                },
+	                dataType: 'JSON',
+	                success: function(data){
+	                    console.log('success!');
+	                    location.href='/addWorkList.html';
+	                 },
+	                error:function(e){
+	                    console.log(e);    
+	                }
+	            });
+	    	}
+		});
+	});
+	    
+
+</script>
+
 </head>
+
 <body>
-    <div class="container">
-        <div class="row">
-            <div>
-                <div>
-                    <label>현장명</label>
-                    <input type="hidden" class="form-control" id="siteCode" name="siteCode">
-                    <input type="text" id="siteName" name="siteName" class="form-control" readonly="readonly">
-                </div>
+	<div class="container">
+		<header>
+			<h2 class="h2_tit">조출,야간 작업 승인 조회
+		
+			<button type="button" class="btn btn-danger" id="addWorkBtn">작업신청</button>
+		 </h2>
+		</header>	
 
-                <div>
-                    <label for="workKind">신청구분</label>
-                    <select id="workKind">
-                        <option value="">[-- 전체 --]</option>
-                        <option value="조출">조촐</option>
-                        <option value="야간">야간</option>
-                        <option value="위험">위험</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="confirmSt">승인상태</label>
-                    <select id="confirmSt">
-                        <option value="">[-- 전체 --]</option>
-                        <option value="대기">대기</option>
-                        <option value="승인">승인</option>
-                        <option value="반려">반려</option>
-                        <option value="취소">취소</option>
-                        
-                    </select>
-                </div>
-                <div>
-                    <label for="companyCode">공사업체</label>
-                    <select id="companyCode">
-                        <option value="">[-- 전체 --]</option>
-                        <option value="">(주)대림</option>
-                        <option value="">디엘이엔씨</option>
-                        <option value="">(주)우노텍</option>
-                        <option value="">(주)선보건업</option>
-                        <option value="">(주)금종산업</option>
-                    </select>
-                </div>
+		<form class="form-inline">
+			<div>
+				<div class="form-group">
+					<label for="site_name">현장명</label>
+					<input type="hidden" id="site_code" name="site_code"> 
+					<input type="text" id="site_name" name="site_name" 
+						class="form-control input-sm" readonly="readonly">
+				</div>
 
-                <div>
-                    <label for="memberName">근로자명</label>
-                    <input type="text"id="memberName" name="memberName_work">
-                </div>
-                <div>
-                    <label for="dateIn">작업기간</label>
-                    <input id="dateIn" name="dateIn" placeholder="시작일자" data-provide="datepicker">
-                    <div>~</div>
-                    <input id="dateEndIn" name="dateEndIn" placeholder="종료일자" data-provide="datepicker">
-                </div>
-                <button type="button" id="dateInSerch">조회</button>
-            </div>
+				<div class="form-group">
+					<label class="input-group-text" for="work_kind">신청구분</label> 
+					<select	class="custom-select w120p mr-sm-2" id="work_kind">
+						<option value="">[-- 전체 --]</option>
+						<option value="조출">조출</option>
+						<option value="야간">야간</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label class="input-group-text" for="confirm_st">승인상태</label> 
+					<select	class="custom-select w120p mr-sm-2" id="confirm_st">
+						<option value="">[-- 전체 --]</option>
+						<option value="대기">대기</option>
+						<option value="승인">승인</option>
+						<option value="취소">취소</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label class="input-group-text" for="company_name">공사업체</label> 
+					<select	class="custom-select mr-sm-3" id="company_name">
+						<option value="">[-- 전체 --]</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label class="input-group-text" for="member_name">근로자명</label>
+					<input type="text" class="form-control input-sm"
+						id="member_name" name="member_name" readonly="readonly">
+				</div>
+			</div>
+			<div>
+				<div class="form-group">
+					<label class="input-group-text" for="dtBegnIn">작업기간</label> 
+					<input class="form-control input-sm" id="work_stard_date"
+						name="work_stard_date" type="date"> ~ 
+					<input class="form-control input-sm" id="work_end_date"
+						name="work_end_date" type="date">
+					<button type="button"
+						class="btn btn-primary"	id="getWorkBtn">조회</button>
+				</div>
+			</div>
 		</div>
-    </div>
+</table>
 </body>
 </html>
-      

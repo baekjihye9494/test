@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div class="container">	
+		<header>
+			<h2 class="h2_tit">조출,야간작업승인 신청 </h2>
+		</header>
+	
+		<div class="row-10">
+			<div class="input-group input-group-sm box_all_srch">
+			<div class="tbl_st01">
+				<form id="form_clAplt" class="needs-validation" novalidate>
+					<table id="addworkPlanTable">
+						<tbody>
+							<tr>
+								<th>신청번호</th>
+									<td nowrap="nowrap">
+									<input type="text" class="form-control"
+										id="workNo" name="workNo" required maxlength="20" readonly="readonly"> 
+										<input type="hidden" class="form-control" id="siteCode" name="siteCode">
+									</td>
+								<th>작업일자</th>
+									<td>
+										<input class="form-control img-calendar" id="workStartDate"	name="workStartDate" 
+												type = "date" data-provide="datepicker">
+									</td>
+								<th>신청구분</th>
+									<td>
+										<select class="custom-select w100" id="workKind" name="workKind">
+												<option value="">[-- 선택 --]</option>
+												<option value="jo">조출</option>
+												<option value="ya">야간</option>
+										</select>
+									</td>
+							</tr>
+							<tr>
+								<th>업체명</th>
+								<td><!-- 로그인 한 사람이 근무하고 있는 업체 가져와야 함 -->
+									<select class="custom-select w100" id="companyCode" name="companyCode" required>
+										<option value="">선택</option>
+									</select>
+								</td>
+								<th>작업시간</th>
+								<td>
+									<select class="custom-select bg_position35"	id="input_stWorkHh" style="width: 65px !important;"></select> 
+										<select class="custom-select bg_position35" id="input_stWorkMm"	style="width: 65px !important;">
+												<option value="00">00</option>
+												<option value="30">30</option>
+										</select> ~ 
+										<select class="custom-select bg_position35"	id="input_edWorkHh" style="width: 65px !important;">
+										</select> <select class="custom-select bg_position35" id="input_edWorkMm" style="width: 65px !important;">
+										<option value="00">00</option>
+										<option value="30">30</option>
+									</select></td>
+								<th>작업담당자</th>
+								<td>
+									<input type="text" class="form-control" id="memberName"	name="memberName">
+								</td>
+
+							</tr>
+							<tr>
+								<th>현장담당자</th><!-- 권한코드로 현장별 근무자 불러오기 -->
+									<td><input type="text" class="form-control"
+										id="dicbicprsnWrk" name="dicbicprsnWrk">
+									</td>
+								<th>작업인원</th>
+									<td>
+										<input type="text" class="form-control" id="nopsWrk" name="nopsWrk">
+									</td>
+								<th>작업위치</th>
+								<td>
+									<input type="text" class="form-control" id="locWrk" name="locWrk">
+								</td>
+							</tr>
+							<tr>
+								<th>작업내용</th>
+									<td colspan="3">
+										<input type="text" class="form-control"	id="cntsWrk" name="cntsWrk">
+									</td>
+								<th>안전관리방안</th>
+									<td>
+										<input type="text" class="form-control" id="cntsRisk" name="cntsRisk">
+									</td>
+							</tr>
+							<tr>
+								<th>작성자</th>
+								<td>
+									<input type="text" class="form-control" id="nmIputAplt"
+									name="nmIputAplt" readonly="readonly">
+									<input 	type="hidden" class="form-control" id="idIputAplt"
+									name="idIputAplt">
+								</td>
+								<th>승인신청일</th>
+								<td>
+									<input type="text" id="dtIputAplt" name="dtIputAplt"
+									readonly="readonly" style="width: 35% !important;">
+									<span style="font-weight: bold; font-size: 13px;">※반려(취소)일&nbsp;&nbsp;</span>
+									<input type="text" id="dtIputRtn" name="dtIputRtn"
+									readonly="readonly" style="width: 35% !important;"> 
+									<input type="hidden" id="cntsResnRtn" name="cntsResnRtn">
+								</td>
+								<th>승인완료일</th>
+								<td><input type="text" class="form-control" id="dtIputApvl"
+									name="dtIputApvl" readonly="readonly">
+								</td>
+							</tr>
+						</tbody>
+						<button onclick="addBtn()" class="btn btn-perimary">신청하기</button>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script>
+
+function addBtn() {
+	
+	
+}
+
+</script>
+</html>

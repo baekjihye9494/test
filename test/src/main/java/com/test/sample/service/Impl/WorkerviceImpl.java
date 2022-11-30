@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.test.sample.mapper.WorkMapper;
 import com.test.sample.service.WorkService;
-import com.test.sample.dao.WorkDAO;
 
 @Service("workService")
 public class WorkerviceImpl implements WorkService {
@@ -24,12 +24,12 @@ public class WorkerviceImpl implements WorkService {
 	 */
 	
 	
-	@Autowired private WorkDAO workDAO;
+	@Autowired private WorkMapper workMapper;
 	
 	@Override
 	public List<Map<String, Object>> selectWorkList (Map<String, Object> map) {
 		
-		return workDAO.selectWorkList(map);
+		return workMapper.selectWorkList(map);
 		
 	}
 }

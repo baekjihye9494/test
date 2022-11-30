@@ -1,103 +1,76 @@
 <!DOCTYPE  >
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
 <title>login.html</title>
- 
-<script src="http://code.jquery.com/jquery-3.1.0.js">
-    
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
 </script>
- 
- 
-<script>
-    $(document).ready(function() {
- 
-        
-        alert("뭐잉?");
-        
-        $("#btnLogin").click(function() {
- 
-            var memberId = $("#memberId").val();
-            var memberPw = $("#memberPw").val();
- 
-            if (memberId == "") {
- 
-                alert("아이디를 입력해주세요");
-                $("#memberId").focus();
-                return;
-            }
- 
-//$반복 var exp = /[a-z0-9]$/; //영문자와 숫자 //정규표현식. test(입력값) 규칙에 맞으면 true if(!exp.test(userid)){ alert("영문자와 숫자만 입력가능합니다."); $("#userid").focus(); return; }
- 
-            if (memberPw == "") {
- 
-                alert("비밀번호를 입력해주세요");
- 
-                $("#memberPw").focus();
-                return;
-            }
- 
-            //비동기 ajax 방식으로 데이터 주고 받기 방버버
- 
-            var data =  {"memberId":memberId, "memberPass":memberPass}
- 
-            alert(memberId+memberPw);
-            
-            $.ajax({
-                
-                type : "post",
-                data : data,
-                url : "/work/login.do",
-                success : function(value) {
- 
-                    $("#result").html(value);
- 
-                }
- 
-            });
- 
-            /*             
-             document.form1.action=""
-             document.from1.submit();
-             */
-        });
- 
-    });
-</script>
- 
- 
+
 </head>
 <body>
- 
- 
-    <table border="1">
- 
- 
- 
-        <tr>
-            <td>아이디</td>
-            <td><input type="text" id="memberId"></td>
-        </tr>
- 
-        <tr>
-            <td>비밀번호</td>
-            <td><input type="password" id="ememberPw"></td>
-        </tr>
- 
- 
- 
-        <tr>
-            <td colspan="2" align="center"><input type="button" 
-            value="로그인" id="btnLogin">로그인</td>
-        </tr>
- 
- 
- 
- 
-    </table>
-    <div id="result">로그인 결과 출력 영역</div>
- 
- 
- 
+	<div class= "container">	
+		<form class="form-inline">
+			<div class="form-group">
+				<label for="member_id">아이디</label>
+				<input type="text" id="member_id" name="member_id" class="form-control">
+			</div>	
+			<div class="form-group">
+				<label for="member_pw">비밀번호</label>
+				<input type="password" id="member_pw" name="member_pw" class="form-control">
+			</div>		
+			<div class="form-group">
+				<button class="btn btn-danger" onclick="loginChk()">로그인</button>
+			</div>
+		</form>
+	</div>
 </body>
+<script>
+
+
+
+function loginChk(){
+    
+    
+    var member_id = $('#member_id').val();
+    var member_pw = $('#member_pw').val();
+    console.log(member_id);
+    console.log(member_pw);
+    
+    if(member_id == "" || member_pw == ""){
+        alert("아이디 또는 비밀번호를 입력해주세요");
+    }else{
+        
+        $.ajax({
+                type:'post',
+                url:"member/login.ajax",
+                data:{
+                    'member_id' : member_id,
+                    'member_pw' : member_pw
+                },
+                dataType: 'JSON',
+                success: function(data){
+                    console.log('success!');
+                    if(!data.loginSuccess){
+                        alert("아이디 또는 비밀번호가 틀렸습니다.");
+                        location.reload();
+                    }else{
+                        location.href='/workList.html';
+                    }
+                },
+                error:function(e){
+                    console.log(e);    
+                }
+            });
+    
+    }
+}
+</script>
+
 </html>

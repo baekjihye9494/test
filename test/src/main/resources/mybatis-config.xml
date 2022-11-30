@@ -7,17 +7,19 @@
 	</settings>
 	
  	<typeAliases>
-		<typeAlias alias="authorityVO" type="com.test.sample.vo.AuthorityVO"/>
-		<typeAlias alias="companyVO" type="com.test.sample.vo.CompanyVO"/>
-		<typeAlias alias="confirmVO" type="com.test.sample.vo.ConfirmVO"/>
-		<typeAlias alias="memberVO" type="com.test.sample.vo.MemberVO"/>
-		<typeAlias alias="siteVO" type="com.test.sample.vo.SiteVO"/>
-		<typeAlias alias="usersiteVO" type="com.test.sample.vo.UsersiteVO"/>	
-		<typeAlias alias="workVO" type="com.test.sample.vo.W‭orkVO"/>
+		<typeAlias alias="AuthorityVO" type="com.test.sample.vo.AuthorityVO"/>
+		<typeAlias alias="CompanyVO" type="com.test.sample.vo.CompanyVO"/>
+		<typeAlias alias="ConfirmVO" type="com.test.sample.vo.ConfirmVO"/>
+		<typeAlias alias="MemberVO" type="com.test.sample.vo.MemberVO"/>
+		<typeAlias alias="SiteVO" type="com.test.sample.vo.SiteVO"/>
+		<typeAlias alias="UsersiteVO" type="com.test.sample.vo.UsersiteVO"/>	
+		<typeAlias alias="WorkVO" type="com.test.sample.vo.WorkVO"/>
 	</typeAliases>
+
+	 
+	 
 	
-	
-	<!--  <typeAliases>
+<!-- 	  <typeAliases>
         
         <package name="com.test.sample"/>
     </typeAliases> -->
