@@ -8,5 +8,6 @@
         SELECT count(member_id) from member where member_id = #{param1} and member_pw = #{param2}
     </select>
 
+
 </mapper>
 

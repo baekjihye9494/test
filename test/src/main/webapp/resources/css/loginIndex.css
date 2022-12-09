@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+ table,th,td {
+        border : 1px solid black;
+        border-collapse : collapse;
+        text-align: center;
+    }
+
+    th, td {
+        padding : 5px 10px;
+    }
+    .container {
+	  border-radius: 50px;
+	  background-color: #f2f2f2;
+	  padding: center;
+	  text-align: center;
+      margin-bottom: 30px;
+      height: auto;
+	}
+    
+    
+    .btn {
+	  border: none; /* Remove borders */
+	  color: white; /* Add a text color */
+	  padding: 10px 16px; /* Add some padding */
+	  cursor: pointer; /* Add a pointer cursor on mouse-over */
+	  border-radius: 12px;
+	}
+
+	.success {background-color: #04AA6D; font-size: 12px;} /* Green */
+	.success:hover {background-color: #46a049;}
+	
+	.info {background-color: #2196F3; font-size: 12px;} /* Blue */
+	.info:hover {background: #0b7dda;}
+	
+	.warning {background-color: #ff9800; font-size: 12px;} /* Orange */
+	.warning:hover {background: #e68a00;}
+	
+	.danger {background-color: #f44336; font-size: 12px;} /* Red */
+	.danger:hover {background: #da190b;}
+	
+	.default {background-color: #e7e7e7; color: black; font-size: 12px;} /* Gray */
+	.default:hover {background: #ddd;}
+		 

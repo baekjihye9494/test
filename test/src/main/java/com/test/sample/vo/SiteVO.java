@@ -6,7 +6,7 @@ import lombok.Data;
 public class SiteVO {
 	
 	private int siteCode;
-	private String siteSt;
+	private String siteName;
 	/**
 	 * 
 1010	e고천

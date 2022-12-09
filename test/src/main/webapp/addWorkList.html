@@ -8,14 +8,15 @@
 
 	<div class="container">	
 		<header>
-			<h2 class="h2_tit">조출,야간작업승인 신청 </h2>
+			<h2>조출,야간작업승인 신청 </h2>
+			<button onclick="addBtn()" class="btn btn-perimary">신청하기</button>
 		</header>
 	
 		<div class="row-10">
 			<div class="input-group input-group-sm box_all_srch">
 			<div class="tbl_st01">
 				<form id="form_clAplt" class="needs-validation" novalidate>
-					<table id="addworkPlanTable">
+					<table id="addWork" class= "table">
 						<tbody>
 							<tr>
 								<th>신청번호</th>
@@ -45,29 +46,18 @@
 										<option value="">선택</option>
 									</select>
 								</td>
-								<th>작업시간</th>
-								<td>
-									<select class="custom-select bg_position35"	id="input_stWorkHh" style="width: 65px !important;"></select> 
-										<select class="custom-select bg_position35" id="input_stWorkMm"	style="width: 65px !important;">
-												<option value="00">00</option>
-												<option value="30">30</option>
-										</select> ~ 
-										<select class="custom-select bg_position35"	id="input_edWorkHh" style="width: 65px !important;">
-										</select> <select class="custom-select bg_position35" id="input_edWorkMm" style="width: 65px !important;">
-										<option value="00">00</option>
-										<option value="30">30</option>
-									</select></td>
+								
 								<th>작업담당자</th>
 								<td>
 									<input type="text" class="form-control" id="memberName"	name="memberName">
 								</td>
-
-							</tr>
-							<tr>
 								<th>현장담당자</th><!-- 권한코드로 현장별 근무자 불러오기 -->
 									<td><input type="text" class="form-control"
 										id="dicbicprsnWrk" name="dicbicprsnWrk">
-									</td>
+								</td>
+
+							</tr>
+							<tr>
 								<th>작업인원</th>
 									<td>
 										<input type="text" class="form-control" id="nopsWrk" name="nopsWrk">
@@ -80,37 +70,15 @@
 							<tr>
 								<th>작업내용</th>
 									<td colspan="3">
-										<input type="text" class="form-control"	id="cntsWrk" name="cntsWrk">
+										<textarea class="form-control"	id="cntsWrk" name="cntsWrk"></textarea>
 									</td>
 								<th>안전관리방안</th>
 									<td>
-										<input type="text" class="form-control" id="cntsRisk" name="cntsRisk">
+										<textarea class="form-control" id="cntsRisk" name="cntsRisk"></textarea>
 									</td>
 							</tr>
-							<tr>
-								<th>작성자</th>
-								<td>
-									<input type="text" class="form-control" id="nmIputAplt"
-									name="nmIputAplt" readonly="readonly">
-									<input 	type="hidden" class="form-control" id="idIputAplt"
-									name="idIputAplt">
-								</td>
-								<th>승인신청일</th>
-								<td>
-									<input type="text" id="dtIputAplt" name="dtIputAplt"
-									readonly="readonly" style="width: 35% !important;">
-									<span style="font-weight: bold; font-size: 13px;">※반려(취소)일&nbsp;&nbsp;</span>
-									<input type="text" id="dtIputRtn" name="dtIputRtn"
-									readonly="readonly" style="width: 35% !important;"> 
-									<input type="hidden" id="cntsResnRtn" name="cntsResnRtn">
-								</td>
-								<th>승인완료일</th>
-								<td><input type="text" class="form-control" id="dtIputApvl"
-									name="dtIputApvl" readonly="readonly">
-								</td>
-							</tr>
+						
 						</tbody>
-						<button onclick="addBtn()" class="btn btn-perimary">신청하기</button>
 					</table>
 				</form>
 			</div>
@@ -120,10 +88,185 @@
 </body>
 <script>
 
-function addBtn() {
-	
-	
-}
+function fn_EventHandler() {
+	  /**************************************************/
+	  /*****************  버튼 이벤트 처리 함수  ****************/
+	  /**************************************************/
+	  //검색 버튼
+	  $('#button_taf6040_search').click(function() {
+	    //초기화
+	    setInsertForm();
+	    //버튼 숨기기
+	    //setButtonHide();
+	    
+	    // 마스터 그리드 검색 함수
+	    fnAddworkMainList();
+	    //조출 야간 작업 화면에서 클릭시 신청구분 값 세팅 및 disabled
+	    //fn_pReqGubun(pReqGubun);
+	  });
+	  // 상세그리드 행추가 버튼
+	  $('#button_addRow').click(function() {
+	    providerModal.clearRows();
+	    gridViewModal.resetSize();
+	    var inCpnyNo = $("#noCpny option:selected").val();
+	    if(inCpnyNo == undefined || inCpnyNo == null ||inCpnyNo == '' ){
+	        alert('업체명을 선택하세요.');
+	        return false;
+	    }
+	    $("#wrkPrsn_new_modal").modal("show");
+	  });
+
+	  //신규버튼
+	  $('#button_new').click(function() {
+
+	    //초기화
+	    setInsertForm();
+      setButtonShow("new");
+	    // 콤포넌트 활성화
+	    fn_ctrlComp(false);
+	    
+	    //기본값 세팅
+	    let str = $('#input_clAplt').val();
+	    if (str=="") str ="AA";
+	    $("#clAplt").val(str);
+	  });	
+	  
+
+	  //저장
+	  $('#button_save').click(function() {
+	    //조출야간 작업계획서
+	    var dtAplt =$('#dtAplt').val(); //신청일자
+	    var clAplt = $('#clAplt').val(); //신청구분
+	    var noCpny = $('#noCpny').val(); //업체
+	    var cntsWrk = $('#cntsWrk').val(); //작업내용
+	    var nopsWrk = $('#nopsWrk').val(); //작업인원
+	    var bicprsnWrk = $('#bicprsnWrk').val(); //작업담당자
+	    //var dicbicprsnWrk = $('#dicbicprsnWrk').val(); //대림담당자, hidden
+	    var idDicbicprsnWrk = $('#idDicbicprsnWrk').val(); //대림담당자, select박스
+	    var timeBegnwrk = $('#input_stWorkHh').val();//작업시작시간
+	    var minBegnwrk=$('#input_stWorkMm').val();//작업시작분
+	    var timeEndWrk=$('#input_edWorkHh').val();//작업종료시간
+	    var minEndWrk=$('#input_edWorkMm').val();//작업종료분
+
+	    //2022.7.14 추가	
+	    var noApltadmn=$('#noApltadmn').val();
+	    var locWrk = $('#locWrk').val(); //작업위치
+	    var cntsRisk = $('#cntsRisk').val(); //안전관리방안		
+	    
+	    var count = providerDtl.getRowCount();
+
+	    if(nopsWrk != count){
+	      alert('작업인원과 근로자내역이 다릅니다.');
+	      return;
+	    }
+	    if(dtAplt.length == 0){
+	      alert('작업일자가 없습니다.');
+	      return;
+	    }
+	    if(clAplt.length == 0){
+	      alert('신청구분이 없습니다.');
+	      return;
+	    }
+	    if(noCpny.length == 0){
+	      alert('업체가 없습니다.');
+	      return;
+	    }
+	    if(nopsWrk.length == 0){
+	      alert('작업인원이 없습니다.');
+	      return;
+	    }
+	    if(bicprsnWrk.length == 0){
+	      alert('작업담당자가 없습니다.');
+	      return;
+	    }
+	    if(cntsWrk.length == 0){
+	      alert('작업내용이 없습니다.');
+	      return;
+	    }
+	    if(locWrk.length == 0){
+		      alert('작업위치가 없습니다.');
+		      return;
+		}
+	    if(cntsRisk.length == 0){
+		      alert('안전관리방안이 없습니다.');
+		      return;
+		    }	    
+	    
+	    
+	    if(count == 0){
+	      alert('근로자내역이 없습니다.');
+	      return;
+	    }
+
+	    if(idDicbicprsnWrk.length == 0){
+		      alert('현장담당자가 없습니다.');
+		      return;
+		    }	    
+	    
+	    if (confirm('저장 하시겠습니까?')) {
+	        var data1IdObjList = [];
+	        var count = providerDtl.getRowCount();
+	        for(var i = 0; count > i; i++) {
+	          var data1IdObj = {};
+
+	          // 노무자 정보 셋팅
+	          data1IdObj["idWrkPrsn"] = gridViewDtl.getValue(i, "idWrkPrsn");   // 노무자ID
+	          data1IdObj["nmWrkPrsn"] = gridViewDtl.getValue(i, "nmWrkPrsn");   // 노무자이름
+	          data1IdObj["nmCpny"] = gridViewDtl.getValue(i, "nmCpny");         // 업체명
+	          data1IdObj["clCpny"] = gridViewDtl.getValue(i, "clCpny");       // 업체구분자
+	          data1IdObj["nmCtyp"] = gridViewDtl.getValue(i, "nmCtyp");     // 공종
+	          data1IdObj["nmCtypIput"] = gridViewDtl.getValue(i, "nmCtypIput"); // 소공종
+	          data1IdObj["nmTeam"] = gridViewDtl.getValue(i, "nmTeam");         // 팀
+
+	          // 업체 정보 셋팅
+	          data1IdObj["dtAplt"] = dtAplt;   //신청일자
+	          data1IdObj["clAplt"] = clAplt;
+	          data1IdObj["noCpny"] = noCpny;   //업체명
+	          data1IdObj["cntsWrk"] = cntsWrk; //작업내용
+	          data1IdObj["nopsWrk"] = nopsWrk; //작업인원
+
+	          // 작업시간 셋팅
+	          data1IdObj["timeBegnwrk"] = timeBegnwrk; //작업시작시간
+	          data1IdObj["minBegnwrk"] = minBegnwrk;   //작업시작분
+	          data1IdObj["timeEndWrk"] = timeEndWrk;   //작업종료시간
+	          data1IdObj["minEndWrk"] = minEndWrk;     //작업종료분
+
+	          // 업체/담당자 셋팅
+	          //data1IdObj["timeWrk"] = timeWrk; //작업시간
+	          data1IdObj["bicprsnWrk"] = bicprsnWrk;       //작업담당자
+	          data1IdObj["idDicbicprsnWrk"] = idDicbicprsnWrk; //대림담당자
+	          data1IdObj["cdSite"] = cdSite;
+	          data1IdObj["apltStat"] = "00";//
+
+	          //2022.7.14 추가		          
+	          data1IdObj["noApltadmn"]	= noApltadmn;	          
+	          data1IdObj["locWrk"] = locWrk; //작업위치
+	          data1IdObj["cntsRisk"] = cntsRisk; //안전관리방안
+	          
+	          
+	          data1IdObjList.push(data1IdObj);
+	        }
+	         $.ajax({
+	          url : URL_CONTEXT + '/safety/addwork/insert',
+	          dataType : 'json',
+	          type : 'POST',
+	          contentType : "application/json",
+	          data : JSON.stringify(data1IdObjList),
+	          success : function(data) {
+	            if(data.success) {
+	              fnAddworkMainList();
+	              //버튼 숨기기
+	              //setInsertForm();
+	              //setButtonHide();
+	            }
+	            else {
+	              alert(data.error);
+	            }
+	          }
+	         });
+	      }
+	    });
+
 
 </script>
 </html>

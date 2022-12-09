@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.sample.dao.NoticeDAO1">
+
+	<select id="loginChk" resultType="Int" parameterType="String"> 
+		SELECT count(mb_id) from member where mb_id = #{param1} and mb_pw = #{param2} 
+	</select>
+	
+	
+	<select id ="memberInfo" resultType="hashmap" parameterType="String">
+		select a.ath_gb, m.cp_code from member m inner join authority a on m.ath_code = a.ath_code where m.mb_id = #{mb_id}
+	</select>
+	
+	
+	<select id="list" resultType="NoticeVO" parameterType="hashmap">
+	select * from (
+		SELECT a.*, ROWNUM as rnum FROM (
+			SELECT  
+				n.noti_code 
+				,n.noti_subject
+				,n.noti_date
+				,n.noti_openType
+				,n.site_code
+				,s.site_name
+				,n.cp_code
+				,c.cp_name
+				,n.mb_id
+				,m.mb_name
+				,(select a.ath_gb from authority a inner join member m on a.ath_code = m.ath_code where m.mb_id = #{loginId}) AS ath_gb
+			FROM notice n INNER JOIN site s ON n.site_code = s.site_code
+				INNER JOIN company c ON n.cp_code = c.cp_code
+				INNER JOIN member m ON n.mb_id = m.mb_id
+		
+			<include refid="searchRequirements"></include>
+		 
+			ORDER BY ${sorting} <if test='sorting.equals("noti_date")'>DESC</if>
+		) a
+	) where rnum between #{num_start_row} and #{num_end_row}
+	</select>
+	
+	
+	
+	
+	
+	
+	<sql id="searchRequirements">
+		<trim prefix="where" suffixOverrides="and">
+			<if test="!site_code.equals('')">n.site_code = #{site_code} and</if>
+			
+			<if test='ATH_GB == "N" and select_cp_code.equals("")'>
+				n.cp_code IN (1,#{CP_CODE}) and
+			</if>
+			
+			<if test="!select_cp_code.equals('')">n.cp_code = #{select_cp_code} and</if>
+			
+			<if test="!search_keyword.equals('')">
+				<if test="search_option.equals('')">(s.site_name || c.cp_name || n.noti_subject || m.mb_name || n.noti_date) like '%' || #{search_keyword} || '%' and</if>
+				<if test="search_option.equals('mb_name')"> m.mb_name like '%' ||  #{search_keyword} || '%'  and</if>
+				<if test="search_option.equals('noti_subject')">n.noti_subject like '%' || #{search_keyword} || '%' and</if>
+			</if>
+			
+			<if test='ATH_GB == "Y"'> (n.noti_date <![CDATA[<=]]> current_date OR n.mb_id = #{loginId})</if>
+		</trim>
+		 
+		 
+		 <if test='ATH_GB == "N"'>and ((n.noti_opentype = 'Y'  AND n.noti_date <![CDATA[<=]]> current_date) OR  n.mb_id = #{loginId})</if>
+	</sql>
+	
+	
+	
+
+	
+	
+	<select id="allCount" resultType="int" parameterType="hashmap">
+		select count(n.noti_code) FROM notice n INNER JOIN site s ON n.site_code = s.site_code
+			INNER JOIN company c ON n.cp_code = c.cp_code
+			INNER JOIN member m ON n.mb_id = m.mb_id
+		
+		<include refid="searchRequirements"></include>
+	</select>
+	
+	
+	
+
+	<select id="site" resultType="SiteVO">
+		select * from site
+	</select>
+	
+	
+	
+	<select id="company" resultType="CompanyVO" parameterType="hashmap">
+		SELECT c.cp_code, c.cp_name FROM company c 
+		<if test='ATH_GB == "N"'>
+			LEFT OUTER JOIN member m ON m.cp_code = c.cp_code WHERE m.mb_id = #{loginId} OR c.cp_code = 1 ORDER BY c.cp_code
+		</if>
+	</select>
+	
+	
+	<insert id="write" parameterType="hashmap">
+		INSERT INTO notice(noti_code, noti_subject, noti_content, noti_openType, mb_id, cp_code, site_code, noti_date) 
+			VALUES(noticet.NEXTVAL, #{noti_subject} , #{noti_content}, #{noti_openType}, #{loginId}, #{cp_code} , #{site_code},
+			 <if test="noti_date.equals('')">current_date</if>
+			 <if test="!noti_date.equals('')">TO_DATE(#{noti_date}, 'YYYY-MM-DD HH24:MI')</if>
+			)
+	</insert>
+	
+	
+	<select id="detail" resultType="NoticeVO" parameterType="String">
+		SELECT 
+			n.noti_code
+			,n.noti_subject
+			,n.noti_content
+			,to_char(n.noti_date,'YYYY-MM-DD HH24:MM') AS noti_date_string
+			,n.noti_opentype
+			,n.mb_id
+			,m.mb_name
+			,n.cp_code
+			,c.cp_name
+			,n.site_code
+			,s.site_name 
+		FROM notice n, member m, company c, site s 
+		WHERE n.mb_id = m.mb_id AND n.cp_code = c.cp_code AND n.site_code = s.site_code AND n.noti_code = #{noti_code}
+	</select>
+	
+</mapper>

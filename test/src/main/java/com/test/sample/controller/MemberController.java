@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.test.sample.service.MemberService;
@@ -33,7 +34,7 @@ public class MemberController {
 	
 	//로그인하기
 	  @RequestMapping(value = "/login.ajax")
-	    @ResponseBody
+	  @ResponseBody
 	    public HashMap<String, Object> login(
 	            @RequestParam String member_id, @RequestParam String member_pw
 	            ,HttpSession session){
@@ -46,7 +47,7 @@ public class MemberController {
 	        
 	        
 	        //세션에 저장
-	        if(loginSuccess) {
+	        if(loginSuccess == true) {
 	            session.setAttribute("loginId", member_id);
 	        }
 	        
@@ -54,5 +55,19 @@ public class MemberController {
 	       
 	        return map;
 	    }
-    
+	  
+	  
+	
+		//로그아웃 처리
+//		@RequestMapping(value = "/logout.ajax")
+//		@ResponseBody
+//		public ModelAndView logout(HttpSession session) {
+//			
+//			memberService.logout(session);
+//			ModelAndView mav = new ModelAndView();
+//			mav.setViewName("login");
+//			mav.addObject("msg", "logout");
+//			
+//			return mav;
+//		}
 }

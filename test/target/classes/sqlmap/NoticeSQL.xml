@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.test.sample.mapper.NoticeMapper">
+
+	<sql id="searchCp">
+		<!-- 업체별 키워드가 있을 때 -->
+		<if test="searchType != ''"> AND n.company_code = #{searchType} </if>
+	</sql>
+	<sql id="searchSt">
+		<!-- 현장별 키워드가 있을 때 -->
+		<if test="searchType != ''"> AND n.site_code = #{searchType} </if>
+	</sql>
+	
+	
+	<sql id="search">
+		<!-- 검색 키워드가 있을 때 -->
+		<if test="keyword != null and keyword != ''">
+			<choose>
+				<!-- 검색 유형이 있을 때 -->
+				<when test="searchType != null and searchType != ''">
+					<choose>
+						<when test="'title'.equals(searchType)"> AND n.notice_title like '%' ||  #{notice_title} || '%' </when>
+						<when test="'content'.equals(searchType)"> AND n.notice_content  like '%' ||  #{notice_content} || '%' </when>
+						<when test="'name'.equals(searchType)"> AND m.member_name  like '%' ||  #{member_name} || '%'	</when>
+					</choose>
+				</when>
+				<!-- 전체 검색일 때 -->
+				<otherwise> 
+					AND ( 
+					n.notice_title  like '%' ||  #{notice_title} || '%' OR
+					n.notice_content  like '%' ||  #{notice_content} || '%' OR 
+					m.member_name  like '%' ||  #{member_name} || '%') 
+					) 
+				</otherwise>
+			</choose>
+		</if>
+	</sql>
+
+	<!-- 권한을 확인하기 위한 쿼리 -->
+	<select id="ahType" resultType="map" parameterType="String">
+		       
+		SELECT 
+			a.authority_type, m.member_code
+		FROM 
+			member m, authority a
+		WHERE 
+			m.authority_code = a.authority_code AND
+			 m.member_id = #{loginId}
+    </select>	
+    
+    <!-- 전체 현장 리스트 -->
+	<select id="stList" resultType="map">
+	 SELECT
+      		site_name ,site_code
+      FROM 
+       		site s
+       	
+	</select>
+    
+    <!-- 자기가 근무하는 현장이름 가져오는 쿼리 -->
+    <select id="mySt" resultType="hashmap" parameterType="String">
+       SELECT
+      		s.site_name , s.site_code 
+      FROM 
+       		site s , member m , company c, authority a, usersite u
+      WHERE 
+        	s.site_code = u.site_code AND
+		    u.member_id = m.member_id AND
+			c.company_code = m.company_code AND
+	        m.authority_code = a.authority_code AND
+	        m.member_id =  #{loginId}
+    </select>
+	
+	<!-- 전체 현장 리스트 -->	
+	<select id="cpList" resultType="hashmap">
+  		SELECT 
+  			company_code, company_name 
+  		FROM
+  			company c 
+    </select>
+
+	<!-- 내가 다니는 회사명조회하는쿼리 -->
+	<select id="myCp" resultType="hashmap" parameterType="String">
+		SELECT 
+			c.company_code, c.company_name 
+		FROM 
+			company c , member m, authority a
+		WHERE 
+			m.company_code = c.company_code
+        AND 
+        	a.authority_code = m.authority_code
+        AND 
+        	m.member_id = #{loginId}
+    </select> 
+
+	<select id="selectNoticeList" resultType=""  parameterType="map">
+	
+	SELECT * FROM (
+	 	SELECT a.*, ROWNUM as RNUM FROM (
+	      SELECT  
+	        n.notice_no 
+	        ,n.notice_title
+	        ,n.notice_content
+	        ,s.site_name
+	        ,n.site_code
+	        ,n.company_code
+	        ,c.company_name
+	        ,n.member_id
+	        ,m.member_name
+	        ,(SELECT a.authority_code FROM authority a 
+	        JOIN member m ON a.authority_code = m.authority_code
+	        WHERE m.member_id =  #{loginId}) AS ahType
+   		FROM notice n  JOIN site s ON n.site_code = s.site_code
+            JOIN company c ON n.company_code = c.company_code
+            JOIN member m ON n.member_id = m.member_id
+			WHERE 1=1
+			
+			<include refid="search" />
+			<include refid="searchCp" />
+			<include refid="searchSt" />
+			AND notice_no IS NOT NULL
+		ORDER BY
+			notice_no DESC
+	    ) a
+	) WHERE
+	  		RNUM between #{startPage} AND #{endPage}
+	</select>
+
+	<!-- 총 게시글 갯수 출력 -->
+	<select id="countBoard"
+		parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM notice 
+			WHERE 1=1 
+			<include refid="search" />
+			<include refid="searchCp" />
+			<include refid="searchSt" />
+			AND notice_no IS NOT NULL
+	</select>
+
+	<!-- 페이징 처리 후 게시글 조회 -->
+	<select id="selectBoard" parameterType="map"
+		resultType="NoticeVO">
+		SELECT  
+	        n.notice_no 
+	        ,n.notice_title
+	        ,n.notice_content
+	        ,s.site_name
+	        ,n.site_code
+	        ,n.company_code
+	        ,c.company_name
+	        ,n.member_id
+	        ,m.member_name
+	        ,(SELECT a.authority_code FROM authority a 
+	        JOIN member m ON a.authority_code = m.authority_code
+	        WHERE m.member_id =  #{loginId}) AS ahType
+   		FROM notice n  JOIN site s ON n.site_code = s.site_code
+            JOIN company c ON n.company_code = c.company_code
+            JOIN member m ON n.member_id = m.member_id
+			WHERE 1=1
+			
+			<include refid="search" />
+			<include refid="searchCp" />
+			<include refid="searchSt" />
+			AND notice_no IS NOT NULL
+		ORDER BY
+			notice_no DESC
+			
+	</select>
+
+	<!-- 전체공지사항 상세보기 -->
+	<select id="selectTotalNoticeOne" parameterType="int" resultType="NoticeVO">
+		SELECT 
+			notice_no noticeNo, 
+			department_code departmentCode,
+			writer writer, 
+			notice_title noticeTitle, 
+			notice_content noticeContent,
+			views views, 
+			create_date createDate, 
+			update_date updateDate 
+		FROM
+			notice 
+		WHERE 
+			notice_no = #{noticeNo}
+	</select>
+
+	<!-- 전체공지사항 추가 -->
+	<insert id="addNotice" parameterType="NoticeVO"> 
+		INSERT INTO notice (notice_no,
+                    notice_title, 
+                    notice_content, 
+                    member_id, 
+                    site_code,
+                    company_code,
+                    create_date
+                    ) 
+                values(
+                    auto_no.NEXTVAL,
+                    #{notice_title},
+                    #{notice_content},
+                   	#{member_id},
+                    #{site_code},
+                    #{company_code}
+                    TO_DATE(#{create_date},'YYYY-MM-DD HH24:MI')
+                );
+	</insert>
+
+	<!-- 공지사항 조회수 증가 -->
+	<update id="updateNoticeCount" parameterType="NoticeVO">
+		UPDATE 
+			notice 
+		SET 
+			views = views + 1 
+		WHERE
+			notice_no = #{noticeNo}
+		</update>
+	
+		<!-- 공지사항 수정 -->
+		<update id="updateTotalNotice" parameterType="NoticeVO">
+		UPDATE 
+			notice 
+		SET 
+			notice_title = #{noticeTitle},
+			notice_content = #{noticeContent}, 
+			update_date = now() 
+		WHERE 
+			notice_no = #{noticeNo}
+	</update>
+
+	<!-- 공지사항 삭제 -->
+	<delete id="deleteTotalNotice" parameterType="int"> 
+		DELETE FROM
+			notice
+		WHERE 
+			notice_no = #{noticeNo}
+	</delete>
+
+
+	<!-- 부서공지 학생 페이징 처리 후 게시글 조회 -->
+	<select id="selectBoard2" parameterType="map" resultType="NoticeVO">
+		SELECT
+			notice_no noticeNo,
+			notice_title noticeTitle,
+			notice_content noticeContent,
+			t.department_code departmentCode,
+			writer,
+			views,
+			create_date createDate,
+			update_date updateDate
+		
+		FROM notice t
+		JOIN (
+	         SELECT department_code, student_code
+	         FROM student
+	         WHERE 1 = 1
+	         AND student_code = #{memberCode}
+	          ) s
+	    	ON t.department_code = s.department_code
+			<include refid="search" /> 
+		ORDER BY
+			notice_no DESC
+		LIMIT
+			#{beginRow}, #{rowPerPage}
+	</select>
+	
+	<select id="countBoard2"
+		parameterType="map" resultType="int">
+		      SELECT COUNT(*)
+		      FROM notice t
+		      JOIN (
+		         SELECT department_code, student_code
+		         FROM student
+		         WHERE 1 = 1
+		         AND student_code = #{memberCode}
+		          ) s
+		      ON t.department_code = s.department_code
+		      WHERE 1=1
+		      <include refid="search" />
+		      AND t.department_code IS NOT NULL
+	</select>	
+	
+	<!-- 부서공지 교수 페이징 처리 후 게시글 조회 -->
+
+		<select id="selectBoard3" parameterType="map" resultType="NoticeVO">
+			SELECT
+				notice_no noticeNo,
+				notice_title noticeTitle,
+				notice_content noticeContent,
+				t.department_code departmentCode,
+				writer,
+				views,
+				create_date createDate,
+				update_date updateDate
+			
+			FROM notice t
+			JOIN (
+			         SELECT department_code, professor_code
+			         FROM professor
+			         WHERE 1 = 1
+			         AND professor_code = #{memberCode}
+			          ) p
+	      			ON t.department_code = p.department_code
+	<include refid="search" /> 
+	ORDER BY
+		notice_no DESC
+	LIMIT
+		#{beginRow}, #{rowPerPage}
+	</select>
+	
+	
+	<select id="countBoard3"
+		parameterType="map" resultType="int">
+		SELECT COUNT(*) 
+		FROM notice t
+		JOIN (
+	         SELECT department_code, professor_code
+	         FROM professor
+	         WHERE 1 = 1
+	         AND professor_code = #{memberCode}
+	          ) p
+	      ON t.department_code = p.department_code
+		<include refid="search" /> 
+		 AND t.department_code IS NOT NULL
+	</select>
+
+	<!-- 부서공지 직원 페이징 처리 후 게시글 조회 -->
+	<select id="selectBoard4" parameterType="map"
+		resultType="NoticeVO">
+	SELECT
+		notice_no noticeNo,
+		notice_title noticeTitle,
+		department_code departmentCode,
+		notice_content
+		noticeContent,
+		writer,
+		views,
+		create_date createDate,
+		update_date updateDate
+	FROM
+		notice 
+		
+		WHERE 1=1
+		<include refid="search" />
+		<include refid="searchCp" />
+		AND department_code IS NOT NULL
+	ORDER BY
+		notice_no DESC
+	LIMIT
+		#{beginRow}, #{rowPerPage}
+	</select>
+	
+	
+	<select id="countBoard4"
+		parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM notice 
+			WHERE 1=1 
+			<include refid="search" />
+			<include refid="searchCp" />
+			AND department_code IS NOT NULL
+	</select>
+	
+	<!--  부서코드 -->
+	<select id="selectTotalDepartmentName" resultType="map">
+		SELECT
+			department_code departmentCode,
+			department_name departmentName
+		FROM
+			department
+	</select>
+	
+	
+</mapper>

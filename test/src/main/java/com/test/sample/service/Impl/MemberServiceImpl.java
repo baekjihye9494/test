@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,26 +26,18 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
     public boolean loginChk(String member_id, String member_pw) {
-        boolean success = false;
+		boolean success = false;
         
-        if(memberMapper.loginChk(member_id,member_pw) > 0) {
-            success = true;
+        if(memberMapper.loginChk(member_id,member_pw) != 0) {
+        	success = true;
         }
         return success;
     }
+
+	/*
+	 * @Override public void logout(HttpSession session) {
+	 * memberMapper.logout(session); }
+	 */
 }
 	
-	/*
-	// 회원로그인
-	public MemberVO selectMemberLogin(MemberVO paramMember) {
-		// 파라미터 디버깅
-		logger.info("paramMember (service) > " + paramMember);
-
-		// 매퍼메서드 호출 후 리턴값 디버깅
-		MemberVO resultMember = memberDAO.selectMemberLogin(paramMember);
-		logger.info("resultMember (service) > " + resultMember);
-
-		
-		return resultMember;
-		*/
 	

@@ -7,7 +7,7 @@ public class AuthorityVO { //권한 테이블
 	
 	private int authorityCode;		//권한코드
 	private String authorityName;	//권한명
-
+	private String authorityType;	//권한타입
 	/**
 	10	개발자
 	20	전체관리자

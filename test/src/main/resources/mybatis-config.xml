@@ -13,7 +13,7 @@
 		<typeAlias alias="MemberVO" type="com.test.sample.vo.MemberVO"/>
 		<typeAlias alias="SiteVO" type="com.test.sample.vo.SiteVO"/>
 		<typeAlias alias="UsersiteVO" type="com.test.sample.vo.UsersiteVO"/>	
-		<typeAlias alias="WorkVO" type="com.test.sample.vo.WorkVO"/>
+		<typeAlias alias="NoticeVO" type="com.test.sample.vo.NoticeVO"/>
 	</typeAliases>
 
 	 
