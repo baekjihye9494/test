@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,110 +21,99 @@ import com.test.sample.vo.SiteVO;
 public class NoticeServiceImpl implements NoticeService {
 	
 	
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	
 	@Autowired private NoticeMapper noticeMapper;
-
 	
+	//로그인
 	@Override
-	// 전체공지사항 목록 리스트
-	public ArrayList<NoticeVO> selectNoticeList(HashMap<String, Object> map) {
-		return noticeMapper.selectNoticeList(map);
-	}
-	
-	@Override
-	// 리스트 총 개수
-	public int countBoard(Map<String, Object> map) {
-		return noticeMapper.countBoard(map);
-	}
-	
-	@Override
-	// 상세보기 or 조회수 증가
-	public NoticeVO selectTotalNoticeOne(int noticeNo) {
-        return noticeMapper.selectTotalNoticeOne(noticeNo);
-    }
-	
-	@Override
-	public void updateTotalNoticeCount(int noticeNo) {
-		noticeMapper.updateTotalNoticeCount(noticeNo);
-    }
-	
-	@Override
-    // 공지사항 입력
-    public int addTotalNotice(NoticeVO Notice) {
-        return noticeMapper.addTotalNotice(Notice);
+    public boolean loginChk(String member_id, String member_pw) {
+		boolean success = false;
+        
+        if(noticeMapper.loginChk(member_id,member_pw) != 0) {
+        	success = true;
+        }
+        return success;
     }
 
+	//로그인 아이디의 권한과 업체 가져오기
 	@Override
-    // 수정
-    public int updateTotalNotice(NoticeVO Notice) {
-        return noticeMapper.updateTotalNotice(Notice);
-    }
-    
-	@Override
-    // 삭제
-    public int deleteTotalNotice(int noticeNo) {
-        return noticeMapper.deleteTotalNotice(noticeNo);
-    }
-    
-	@Override
-	// 현장별 게시판 조회
-	public ArrayList<NoticeVO> selectBoardSt(HashMap<String, Object> map) {
-		return noticeMapper.selectBoardSt(map);
-	}
-	
-	@Override
-	// 현장별 , 게시물 갯수
-	public int countBoardSt(Map<String, Object> map) {
-		return noticeMapper.countBoardSt(map);
-	}
-	
-	
-	@Override
-	// 업체별 게시판 조회 
-	public ArrayList<NoticeVO> selectBoardCp(HashMap<String, Object> map) {
-		return noticeMapper.selectBoardCp(map);
-	}
-	
-	@Override	
-	// 업체별 , 게시물 갯수
-	public int countBoardCp(HashMap<String, Object> map) {
-		return noticeMapper.countBoardCp(map);
-	}
-	
-
-	@Override
-	// 멤버 권한 확인 메서드
 	public HashMap<String, Object> ahType(String memberId) {
+		// TODO Auto-generated method stub
 		return noticeMapper.ahType(memberId);
 	}
 
-	//전체현장 리스트
 	@Override
-	public ArrayList<Map<String, Object>> stList() {
-		// TODO Auto-generated method stub
-		return noticeMapper.stList();
+	public ArrayList<NoticeVO> list(HashMap<String, Object> info) {
+		logger.debug("리스트 호출 서비스 진입======");
+		logger.debug("권한"+info.get("AUTHORITY_TYPE"));
+		logger.debug(String.valueOf(info.get("company_code")));//소문자로 했더니 안나옴
+		logger.debug("아이디"+info.get("loginId"));
+		return noticeMapper.list(info);
 	}
-	//내가 근무하는 현장
+	
+
+	//현장리스트
 	@Override
-	public ArrayList<Map<String, Object>> mySt(String loginId) {
+	public ArrayList<SiteVO> site() {
 		// TODO Auto-generated method stub
-		return noticeMapper.mySt(loginId);
+		return noticeMapper.site();
 	}
 
-	//업체 전체 리스트
+	//업체리스트
 	@Override
-	public ArrayList<Map<String, Object>> cpList() {
+	public ArrayList<CompanyVO> company(HashMap<String, Object> ahType) {
 		// TODO Auto-generated method stub
-		return noticeMapper.cpList();
+		return noticeMapper.company(ahType);
+	}
+	
+	//게시글 갯수
+	@Override
+	public int allCount(HashMap<String, Object> info) {
+		// TODO Auto-generated method stub
+		return noticeMapper.allCount(info);
 	}
 
-	//내가 근무하는 업체
+	//상세보기
 	@Override
-	public ArrayList<Map<String, Object>> myCp(String loginId) {
+	public NoticeVO selectTotalNoticeOne(int noticeNo) {
 		// TODO Auto-generated method stub
-		return noticeMapper.myCp(loginId);
+		return noticeMapper.selectTotalNoticeOne(noticeNo);
+		
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public void updateTotalNoticeCount(int noticeNo) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public int addTotalNotice(NoticeVO Notice) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int updateTotalNotice(NoticeVO Notice) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteTotalNotice(int noticeNo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 	
 	
 	

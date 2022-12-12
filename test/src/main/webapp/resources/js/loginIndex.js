@@ -18,7 +18,7 @@ function loginChk(){
         
         $.ajax({
                 type:'post',
-                url:"member/login.ajax",
+                url:"notice/login.ajax",
                 data:{
                     'member_id' : member_id,
                     'member_pw' : member_pw
@@ -31,7 +31,7 @@ function loginChk(){
                         location.reload();
                     }else{
                         location.href='/noticeList.html';
-                        console.log("dddddd");
+                        console.log("성공!");
                     }
                 },
                 error:function(e){

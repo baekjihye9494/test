@@ -13,21 +13,44 @@ import com.test.sample.vo.SiteVO;
 
 public interface NoticeMapper {
 	
+	// 회원로그인
+	int loginChk(String member_id, String member_pw);
 	
-	// 게시물 총 갯수
-	int countBoard(Map<String, Object> map);
+	// 멤버 권한확인 메서드
+	HashMap<String, Object> ahType(String memberId);
 
 	// 페이징 처리 게시글 조회
-	ArrayList<NoticeVO> selectNoticeList(HashMap<String, Object> map);
+	ArrayList<NoticeVO> list(HashMap<String, Object> info);
+	
+	//사이트리스트
+	ArrayList<SiteVO> site();
+
+	//업체리스트
+	ArrayList<CompanyVO> company();
+	
+	//내가 일하는 업체리스트
+	ArrayList<CompanyVO> company(HashMap<String, Object> ahType);
+	
+	// 게시물 총 갯수
+	int allCount(HashMap<String, Object> info);
+
+	// 공지사항 상세보기
+	NoticeVO selectTotalNoticeOne(int noticeNo);
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	// 공지사항 조회수
 	void updateTotalNoticeCount(int noticeNo);
 	
 	// 전체공지사항 추가
 	int addTotalNotice(NoticeVO Notice);
-
-	// 공지사항 상세보기
-	NoticeVO selectTotalNoticeOne(int noticeNo);
 		
 	// 공지사항 수정
 	int updateTotalNotice(NoticeVO Notice);
@@ -36,6 +59,10 @@ public interface NoticeMapper {
 	int deleteTotalNotice(int noticeNo);
 	
 	
+	
+	
+	
+	/**
 	//현장별 게시판 조회 , 게시물 갯수
 	ArrayList<NoticeVO> selectBoardSt(HashMap<String, Object> map);
 	int countBoardSt(Map<String, Object> map);
@@ -44,8 +71,6 @@ public interface NoticeMapper {
 	ArrayList<NoticeVO> selectBoardCp(HashMap<String, Object> map);
 	int countBoardCp(Map<String, Object> map);
 	
-	// 멤버 권한확인 메서드
-	HashMap<String, Object> ahType(String memberId);
 	
 
 	// 현장전체리스트 / 내가 근무하는 현장
@@ -56,4 +81,6 @@ public interface NoticeMapper {
 	ArrayList<Map<String, Object>> cpList();
 	ArrayList<Map<String, Object>> myCp(String loginId);
 
+
+**/
 }

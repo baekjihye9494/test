@@ -22,14 +22,35 @@ import com.test.sample.vo.PagingVO;
 import com.test.sample.vo.SiteVO;
 
 @RestController
-@RequestMapping(value="/notice")
+@RequestMapping(value="notice")
 public class NoticeController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	
-	@Autowired NoticeService noticeService;
+	@Autowired private NoticeService noticeService;
 	
-	/*로그아웃*/
+
+	//로그인하기
+    @RequestMapping(value = "/login.ajax")
+    @ResponseBody
+    public HashMap<String, Object> login(
+            @RequestParam String member_id, @RequestParam String member_pw
+            ,HttpSession session){
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        
+        boolean loginSuccess = noticeService.loginChk(member_id,member_pw);
+        logger.debug("확인 : " + loginSuccess );
+        //세션에 저장
+        if(loginSuccess == true) {
+            session.setAttribute("loginId", member_id);
+        }
+        map.put("loginSuccess", loginSuccess);
+        return map;
+        
+    }
+  
+
+	//로그아웃
 	@RequestMapping(value="/logout")
 	public HashMap<String, Object> logout(HttpSession session) {
 		session.removeAttribute("loginId");
@@ -49,96 +70,82 @@ public class NoticeController {
 	    
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String loginId = (String) session.getAttribute("loginId");
-		logger.debug("세션 loginId 확인---->" + loginId );
+		logger.debug(loginId);
 		
 		HashMap<String, Object> ahType = noticeService.ahType(loginId);
+		
 		//현장 데이터,업체 데이터 가지고 오기
-		map.put("ahType", ahType);
-		logger.info("ahType>>>" +ahType);
-		
-		
-		//전체현장 리스트 담기
-		ArrayList<Map<String, Object>> stList = noticeService.stList();
-		//나의현장 리스트 담기
-		ArrayList<Map<String, Object>> mySt = noticeService.mySt(loginId);
-		//전체업체 리스트 담기
-		ArrayList<Map<String, Object>> cpList = noticeService.cpList();
-		//나의업체 리스트 담기	    
-		ArrayList<Map<String, Object>> myCp = noticeService.myCp(loginId);
-		
-		map.put("stList",stList);
-		map.put("mySt",mySt);
-		map.put("cpList", cpList);
-		map.put("myCp", myCp);
-		
-		logger.info("stList>>>" + stList);
-		logger.info("mySt>>>" + mySt);
-		logger.info("cpList>>>" +cpList);
-		logger.info("myCp>>>" + myCp);
-       
-		return map;
-	 
+		ahType.put("loginId", loginId);
+		ArrayList<SiteVO> site = noticeService.site();
+		ArrayList<CompanyVO> company = noticeService.company(ahType);
+		logger.debug("현장명 : " + site.toString());
+		logger.debug("업체명 : " + company.toString());
+		map.put("site", site);
+		map.put("company", company);
+	   
+	    return map;
 	}
    
-	
-	
 
 	
 	/*권한과 업체에 맞게 리스트 불러오기*/
 	@RequestMapping(value = "/list.ajax")
 	@ResponseBody
 	public HashMap<String, Object> noticeList(HttpSession session,
-		@RequestParam HashMap<String, Object> params){
+		@RequestParam HashMap<String, String> params){
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String loginId = (String) session.getAttribute("loginId");
-		logger.info(loginId);
+		logger.debug(loginId);
 		
 		
 		//회원의 권한(관리자 여부)과 업체코드 갖고오기 
-		HashMap<String, Object> ahType = noticeService.ahType(loginId);
-		ahType.put("loginId", loginId);
-		//권한 가져오기
-		logger.info("loginId :"+ loginId);
+		HashMap<String, Object> Info = noticeService.ahType(loginId);
+		logger.debug("info 확인 :  "  + Info);
+		Info.put("loginId", loginId);
+		
 
-		//에이작스에서 선언한 변수를 파라메타 값(params.get("파라미터변수명")으로 불러온다.
-		// 셀렉트박스에 넣은 id
-		logger.info("sorting :"+ params.get("sorting")); 
-		logger.info("stName : " + params.get("stName"));
-		logger.info("cpName : " + params.get("cpName"));
-		logger.info("searchType : " + params.get("searchType"));
-		logger.info("keyword : " + params.get("keyword"));
-		ahType.put("sorting", params.get("sorting"));
-		ahType.put("stName", params.get("stName"));
-		ahType.put("cpName", params.get("cpName"));
-		ahType.put("searchType", params.get("searchType"));
-		ahType.put("keyword", params.get("keyword"));
+		//params 확인(selectbox,검색값) 
+		logger.debug("sorting :"+ params.get("sorting"));
+		logger.debug("site_code : " + params.get("site_code"));
+		logger.debug("company_code : " + params.get("company_code"));
+		logger.debug("search_option : " + params.get("search_option"));
+		logger.debug("search_keyword : " + params.get("search_keyword"));
+		Info.put("sorting", params.get("sorting"));
+		Info.put("site_code", params.get("site_code"));
+		Info.put("conpany_code", params.get("conpany_code"));
+		Info.put("search_option", params.get("search_option"));
+		Info.put("search_keyword", params.get("search_keyword"));
 		
 		
 		//페이징
-		int currentPage = Integer.parseInt((String) params.get("currentPage"));
-		logger.info("보여줄 페이지================================= : " + currentPage);
+		int page = Integer.parseInt(params.get("page"));
+		logger.info("보여줄 페이지================================= : " + page);
 		
 		int num_page_size = 10; //한페이지 출력 개수 
-		int num_start_row =((currentPage-1)*num_page_size)+1;
-		int num_end_row = (currentPage * num_page_size);
-		ahType.put("num_start_row", num_start_row);
-		ahType.put("num_end_row", num_end_row);
-		int countBoard = noticeService.countBoard(ahType);
-		logger.info("총 게시물 수 : " + countBoard);
+		int num_start_row =((page-1)*num_page_size)+1;
+		int num_end_row = (page * num_page_size);
+		Info.put("num_start_row", num_start_row);
+		Info.put("num_end_row", num_end_row);
+
+		logger.debug("num_start_row : " + num_start_row);
+		logger.debug("num_end_row : " + num_end_row);
+		
+		int allCnt = noticeService.allCount(Info);
+		logger.debug("총 게시물 수 : " + allCnt);
 
 		//생성가능한 페이지 page 2 allcnt4 /
-		int currentPages = countBoard%num_page_size>0? (countBoard/num_page_size+1) : (countBoard/num_page_size);
-		if(currentPages<currentPage) {
-			currentPage = currentPages;
+		int pages = allCnt%num_page_size>0? (allCnt/num_page_size+1) : (allCnt/num_page_size);
+		if(pages<page) {
+			page = pages;
 		}
-		map.put("currentPages", currentPages);
-		map.put("currentPage", currentPage);
+		map.put("pages", pages);
+		map.put("currPage", page);
 				
-		logger.info("==================================================" + ahType);
+		logger.info("==================================================" + Info);
 		//권한과 업체에 따른 리스트 가져오기
-		ArrayList<NoticeVO> noticeList = noticeService.selectNoticeList(ahType);
-		logger.info(" 개수 : " + noticeList.toString());
+		ArrayList<NoticeVO> noticeList = noticeService.list(Info);
+		logger.info(" 개수 : " + noticeList.size() );
 		map.put("noticeList", noticeList);
 				
 	    return map;
