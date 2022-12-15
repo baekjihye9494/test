@@ -39,7 +39,7 @@ public class NoticeController {
         HashMap<String, Object> map = new HashMap<String, Object>();
         
         boolean loginSuccess = noticeService.loginChk(member_id,member_pw);
-        logger.debug("확인 : " + loginSuccess );
+        logger.info("확인 : " + loginSuccess );
         //세션에 저장
         if(loginSuccess == true) {
             session.setAttribute("loginId", member_id);
@@ -56,7 +56,7 @@ public class NoticeController {
 		session.removeAttribute("loginId");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("logout", "success");
-		logger.debug("세션 로그아웃 확인---->" + map );
+		logger.info("세션 로그아웃 확인---->" + map );
 		return map;
 
 	}
@@ -70,18 +70,20 @@ public class NoticeController {
 	    
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String loginId = (String) session.getAttribute("loginId");
-		logger.debug(loginId);
+		logger.info(loginId);
 		
 		HashMap<String, Object> ahType = noticeService.ahType(loginId);
 		
 		//현장 데이터,업체 데이터 가지고 오기
 		ahType.put("loginId", loginId);
-		ArrayList<SiteVO> site = noticeService.site();
+		ArrayList<SiteVO> site = noticeService.site(ahType);
 		ArrayList<CompanyVO> company = noticeService.company(ahType);
-		logger.debug("현장명 : " + site.toString());
-		logger.debug("업체명 : " + company.toString());
+		logger.info("현장명 : " + site.toString());
+		logger.info("업체명 : " + company.toString());
 		map.put("site", site);
 		map.put("company", company);
+		map.put("loginId", loginId);
+
 	   
 	    return map;
 	}
@@ -94,33 +96,35 @@ public class NoticeController {
 	public HashMap<String, Object> noticeList(HttpSession session,
 		@RequestParam HashMap<String, String> params){
 		
+		
+		logger.info("컨트롤러 진입????==========");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String loginId = (String) session.getAttribute("loginId");
-		logger.debug(loginId);
+		logger.info(loginId);
 		
 		
 		//회원의 권한(관리자 여부)과 업체코드 갖고오기 
 		HashMap<String, Object> Info = noticeService.ahType(loginId);
-		logger.debug("info 확인 :  "  + Info);
+		logger.info("info 확인 :  "  + Info);
 		Info.put("loginId", loginId);
 		
 
 		//params 확인(selectbox,검색값) 
-		logger.debug("sorting :"+ params.get("sorting"));
-		logger.debug("site_code : " + params.get("site_code"));
-		logger.debug("company_code : " + params.get("company_code"));
-		logger.debug("search_option : " + params.get("search_option"));
-		logger.debug("search_keyword : " + params.get("search_keyword"));
 		Info.put("sorting", params.get("sorting"));
 		Info.put("site_code", params.get("site_code"));
-		Info.put("conpany_code", params.get("conpany_code"));
+		Info.put("company_code", params.get("company_code"));
 		Info.put("search_option", params.get("search_option"));
 		Info.put("search_keyword", params.get("search_keyword"));
+		logger.info("sorting :"+ params.get("sorting"));
+		logger.info("site_code : " + params.get("site_code"));
+		logger.info("company_code : " + params.get("company_code"));
+		logger.info("search_option : " + params.get("search_option"));
+		logger.info("search_keyword : " + params.get("search_keyword"));
 		
 		
 		//페이징
 		int page = Integer.parseInt(params.get("page"));
-		logger.info("보여줄 페이지================================= : " + page);
+		logger.info("보여줄 페이지 수--->" + page);
 		
 		int num_page_size = 10; //한페이지 출력 개수 
 		int num_start_row =((page-1)*num_page_size)+1;
@@ -128,11 +132,11 @@ public class NoticeController {
 		Info.put("num_start_row", num_start_row);
 		Info.put("num_end_row", num_end_row);
 
-		logger.debug("num_start_row : " + num_start_row);
-		logger.debug("num_end_row : " + num_end_row);
+		logger.info("num_start_row : " + num_start_row);
+		logger.info("num_end_row : " + num_end_row);
 		
 		int allCnt = noticeService.allCount(Info);
-		logger.debug("총 게시물 수 : " + allCnt);
+		logger.info("총 게시물 수 : " + allCnt);
 
 		//생성가능한 페이지 page 2 allcnt4 /
 		int pages = allCnt%num_page_size>0? (allCnt/num_page_size+1) : (allCnt/num_page_size);
@@ -152,7 +156,81 @@ public class NoticeController {
 	}
 	
 	
-   
 	
+	//상세보기
+	@RequestMapping(value = "/detail.ajax")
+	@ResponseBody
+	public HashMap<String, Object> noticeOne(HttpSession session,
+			@RequestParam int notice_no){
+		logger.info("상세보기 컨트롤러 진입======?");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String loginId = (String) session.getAttribute("loginId");
+		logger.info(loginId);
+		map.put("loginId", loginId);
+		//세션에 아이디값 담기
+
+		map.put("notice_no",notice_no);
+		logger.info("공지 코드 >>> " + notice_no);
+		NoticeVO detail = noticeService.noticeOne(notice_no);
+		//공지코드 확인
+		logger.info("상세보기 확인 >>> " + detail);
+		map.put("detail",detail);
+		//상세보기 맵에 담아서 보내기
+		
+	    return map;
+	}
+	
+	
+	
+	
+	
+	
+	/*권한과 업체에 맞게 리스트 불러오기*/
+	@RequestMapping(value = "/update.ajax")
+	@ResponseBody
+	public HashMap<String, Object> updateNotice(HttpSession session,
+			@RequestParam int noticeNo,
+		@RequestParam HashMap<String, Object> params){
+		logger.info("수정 컨트롤러 진입======?");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String loginId = (String) session.getAttribute("loginId");
+		logger.info(loginId);
+		map.put("loginId", loginId);
+		
+		
+		logger.info("공지 코드 >>> " + noticeNo);
+		NoticeVO noticeOne = noticeService.noticeOne(noticeNo);
+		
+		logger.info("상세보기 확인 >>> " + noticeOne);
+		map.put("noticeOne",noticeOne);
+	    return map;
+	}
+	
+	
+	
+	
+	
+	/*권한과 업체에 맞게 리스트 불러오기*/
+	@RequestMapping(value = "/delete.ajax")
+	@ResponseBody
+	public HashMap<String, Object> detelteNotice(HttpSession session,
+			@RequestParam int noticeNo,
+		@RequestParam HashMap<String, Object> params){
+		logger.info("삭제 컨트롤러 진입======?");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String loginId = (String) session.getAttribute("loginId");
+		logger.info(loginId);
+		map.put("loginId", loginId);
+		
+		
+		
+		
+	    return map;
+	}
+	
+
 
 }

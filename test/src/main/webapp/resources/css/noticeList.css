@@ -21,8 +21,8 @@ table {
 
 
     .search-btn {
-        width: 20%;
-        padding: 0px 0px 0px 20px;
+        width: 10%;
+        padding: 0px 0px 0px 15px;
         height: auto;
     }
 
@@ -34,15 +34,6 @@ table {
     }
 
 
-    .btn_search {
-        width: 60px;
-        height: 35px;
-        background: rgb(74, 103, 169);
-        padding: 5px 17px 5px 13px;
-        border-radius: 5px;
-        cursor: pointer;
-        height: auto;
-    }
 
 
     .search-box {
@@ -137,38 +128,30 @@ table {
 
    
 
-    span {
-        text-align : center;
-        color: white;
-        font-size: 15px;
-        display: table-cell;
-        line-height: 20px;
-        height: auto;
-    }
+    
     
    
 	
     .btn {
-	  border: none; /*Remove borders */
-	  color: white; /* Add a text color */
-	  padding: 10px 16px; /* Add some padding */
-	  cursor: pointer; /* Add a pointer cursor on mouse-over */
-	  border-radius: 12px;
-	  height: auto;
+	     border: none;
+	    color: white;
+	    padding: 7px 15px;
+	    cursor: pointer;
+	    border-radius: 5px;
 	}
 
-	.success {background-color: #04AA6D; font-size: 12px;} /* Green */
+	.success {background-color: #04AA6D; font-size: 7px;} /* Green */
 	.success:hover {background-color: #46a049;}
 	
-	.info {background-color: #2196F3; font-size: 12px;} /* Blue */
+	.info {background-color: #2196F3; font-size: 7px;} /* Blue */
 	.info:hover {background: #0b7dda;}
 	
-	.warning {background-color: #ff9800; font-size: 12px;} /* Orange */
+	.warning {background-color: #ff9800; font-size: 7px;} /* Orange */
 	.warning:hover {background: #e68a00;}
 	
-	.danger {background-color: #f44336; font-size: 12px;} /* Red */
+	.danger {background-color: #f44336; font-size: 7px;} /* Red */
 	.danger:hover {background: #da190b;}
 	
-	.default {background-color: #e7e7e7; color: black; font-size: 12px; float: right;} /* Gray */
+	.default {background-color: #e7e7e7; color: black; font-size: 7px; } /* Gray */
 	.default:hover {background: #ddd; }
 		 

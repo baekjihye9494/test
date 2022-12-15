@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+table {
+        width : 100%;
+    }
+
+    table,th,td {
+        border : 1px solid black;
+        border-collapse : collapse;
+        text-align: center;
+    }
+
+    th, td {
+        padding : 5px 10px;
+    }
+    textarea {
+    
+    rows : 10px;
+    readonly : readonly;
+	background-color: #fff;
+	form-control : auto;
+	
+	}
+    
+    
+    .btn {
+	  border: none; /*Remove borders */
+	  color: white; /* Add a text color */
+	  padding: 10px 15px; /* Add some padding */
+	  cursor: pointer; /* Add a pointer cursor on mouse-over */
+	  border-radius: 12px;
+	  height: auto;
+	}
+
+	.success {background-color: #04AA6D; font-size: 7px;} /* Green */
+	.success:hover {background-color: #46a049;}
+	
+	.info {background-color: #2196F3; font-size: 7px;} /* Blue */
+	.info:hover {background: #0b7dda;}
+	
+	.warning {background-color: #ff9800; font-size: 7px;} /* Orange */
+	.warning:hover {background: #e68a00;}
+	
+	.danger {background-color: #f44336; font-size: 7px;} /* Red */
+	.danger:hover {background: #da190b;}
+	
+	.default {background-color: #e7e7e7; color: black; font-size: 7px;} /* Gray */
+	.default:hover {background: #ddd; }
+		 

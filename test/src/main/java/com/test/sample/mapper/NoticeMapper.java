@@ -23,10 +23,7 @@ public interface NoticeMapper {
 	ArrayList<NoticeVO> list(HashMap<String, Object> info);
 	
 	//사이트리스트
-	ArrayList<SiteVO> site();
-
-	//업체리스트
-	ArrayList<CompanyVO> company();
+	ArrayList<SiteVO> site(HashMap<String, Object> ahType);
 	
 	//내가 일하는 업체리스트
 	ArrayList<CompanyVO> company(HashMap<String, Object> ahType);
@@ -35,7 +32,7 @@ public interface NoticeMapper {
 	int allCount(HashMap<String, Object> info);
 
 	// 공지사항 상세보기
-	NoticeVO selectTotalNoticeOne(int noticeNo);
+	NoticeVO noticeOne(int noticeNo);
 	
 	
 	

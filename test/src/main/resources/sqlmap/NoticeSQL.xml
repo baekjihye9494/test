@@ -4,67 +4,74 @@
 
 <mapper namespace="com.test.sample.mapper.NoticeMapper">
 
-	<!-- <sql id="searchCp">
-		업체별 키워드가 있을 때
-		<if test="searchType != ''"> AND n.company_code = #{searchType} </if>
+	<sql id="searchCp">
+		<!-- 업체별 키워드가 있을 때 -->
+		<if test="company_code != ''"> AND n.company_code = #{company_code} </if>
 	</sql>
+	
+	
 	<sql id="searchSt">
-		현장별 키워드가 있을 때
-		<if test="searchType != ''"> AND n.site_code = #{searchType} </if>
+		<!-- 현장별 키워드가 있을 때 -->
+		<if test="site_code != ''"> AND n.site_code = #{site_code} </if>
 	</sql>
 	
 	
 	<sql id="search">
-		검색 키워드가 있을 때
-		<if test="keyword != null and keyword != ''">
+		<!-- 검색 키워드가 있을 때 -->
+		<if test="search_keyword != null and search_keyword != ''">
 			<choose>
-				검색 유형이 있을 때
-				<when test="searchType != null and searchType != ''">
+				<!-- 검색 유형이 있을 때 -->
+				<when test="search_option != null and search_option != ''">
 					<choose>
-						<when test="'title'.equals(searchType)"> AND n.notice_title like '%' ||  #{notice_title} || '%' </when>
-						<when test="'content'.equals(searchType)"> AND n.notice_content  like '%' ||  #{notice_content} || '%' </when>
-						<when test="'name'.equals(searchType)"> AND m.member_name  like '%' ||  #{member_name} || '%'	</when>
+						<when test="'title'.equals(search_option)"> AND n.notice_title like '%' ||  #{notice_title} || '%' </when>
+						<when test="'name'.equals(search_option)"> AND m.member_name  like '%' ||  #{member_name} || '%'	</when>
 					</choose>
 				</when>
-				전체 검색일 때
+				<!-- 전체 검색일 때-->
 				<otherwise> 
 					AND ( 
-					n.notice_title  like '%' ||  #{notice_title} || '%' OR
-					n.notice_content  like '%' ||  #{notice_content} || '%' OR 
-					m.member_name  like '%' ||  #{member_name} || '%') 
+					s.site_name 	like '%' ||  #{site_name} 	 || '%' OR
+					c.company_name  like '%' ||  #{company_name} || '%' OR 
+					n.notice_title  like '%' ||  #{notice_title} || '%' OR 
+					m.member_name  like '%' ||  #{member_name} || '%' OR 
+					n.create_date  like '%' ||  #{create_date} || '%' 
 					) 
 				</otherwise>
 			</choose>
 		</if>
-	</sql> -->
+	</sql> 
 	
 	
 	
-	
-	<sql id="searchRequirements"><!-- 검색요구사항 정리 -->
+	<!-- 
+	<sql id="searchRequirements">검색요구사항 정리
 		<trim prefix="where" suffixOverrides="and">
-			<if test="!site_code.equals('')">n.site_code = #{site_code} and</if>
+			<if test="!site_code.equals('') and site_code != nill">n.site_code = #{SITE_CODE} and</if>
 			
 			<if test='AUTHORITY_TYPE == "N" and company_code.equals("")'>
 				n.company_code IN (1,#{COMPANY_CODE}) and
 			</if>
 			
-			<if test="!company_code.equals('')">n.company_code = #{company_code} and</if>
+			<if test="!company_code.equals('')">n.company_code = #{COMPANY_CODE} and</if>
 			
-			<if test="!keyword.equals('')">
+			<if test="!search_keyword.equals('')">
 				<if test="search.equals('')">(s.site_name || c.company_name || n.notice_title || m.member_name || n.create_date) like '%' || #{search_keyword} || '%' and</if>
-				<if test="searchType.equals('member_name')"> m.member_name like '%' ||  #{keyword} || '%'  and</if>
-				<if test="searchType.equals('notice_title')">n.notice_title like '%' || #{keyword} || '%' and</if>
+				<if test="search_option.equals('MEMBER_NAME')"> m.member_name like '%' ||  #{keyword} || '%'  and</if>
+				<if test="search_option.equals('NOTICE_TITLE')">n.notice_title like '%' || #{keyword} || '%' and</if>
 			</if>
 			
 			<if test='AUTHORITY_TYPE == "Y"'> (n.create_date <![CDATA[<=]]> create_date OR n.member_id = #{loginId})</if>
 		</trim>
-	</sql>
+	</sql> -->
+	
+	
 	
 		<!-- 로그인 -->
 	<select id="loginChk" resultType="Int" parameterType="String">
         SELECT count(member_id) from member where member_id = #{param1} and member_pw = #{param2}
     </select>
+    
+    
     
     <!-- 권한을 확인하기 위한 쿼리 -->
 	<select id="ahType" resultType="map" parameterType="String">
@@ -79,8 +86,16 @@
     </select>	
     
     <!-- 전체 현장 리스트 -->
-	<select id="site" resultType="map">
-	 SELECT * from  site 
+	<select id="site" resultType="SiteVO" parameterType="hashmap">
+	 	 SELECT s.site_code , s.site_name FROM  site s 
+	     <if test='AUTHORITY_TYPE == "N"'>
+	     LEFT OUTER JOIN usersite u   
+	     	ON u.site_code = s.site_code 
+	     JOIN member m 
+	     	ON  u.member_id= m.member_id
+	     WHERE m.member_id = #{loginId} 
+	     ORDER BY s.site_code
+	  </if>
 		
 	</select>
     
@@ -111,9 +126,10 @@
 	        ,c.company_name
 	        ,n.member_id
 	        ,m.member_name
+	        ,n.create_date 
 	        ,(SELECT a.authority_code FROM authority a 
 	        JOIN member m ON a.authority_code = m.authority_code
-	        WHERE m.member_id =  #{loginId}) AS ahType
+	        WHERE m.member_id =  #{loginId} ) AS ahType
    		FROM 
    			notice n JOIN site s 
    		ON 
@@ -128,38 +144,49 @@
 			n.member_id = m.member_id
 		WHERE 1=1
 			
-			<include refid="searchRequirements" />
-			AND notice_no IS NOT NULL
+			<include refid="search" />
+			<include refid="searchCp" />
+			<include refid="searchSt" />
 		ORDER BY
 			 ${sorting} <if test='sorting.equals("create_date")'>DESC</if>
 	    ) a
 	) WHERE
 	  		RNUM BETWEEN #{num_start_row} AND #{num_end_row}
+	  		
 	</select>
 
 	<!-- 총 게시글 갯수 출력 -->
-	<select parameterType="hashmap" resultType="int" id="allCount">
+	<select  id="allCount" parameterType="hashmap" resultType="int">
 		select 
-			count(n.notice_no) 
+			count(DISTINCT n.notice_no) 
 		FROM 
 			notice n ,site s ,company c , member m 
-		WHERE
-			n.site_code = s.site_code AND
-			n.company_code = c.company_code AND
-			n.member_id = m.member_id 
-	<include refid="searchRequirements"/>
+		WHERE 1=1
+			<include refid="search" />
+			<include refid="searchCp" />
+			<include refid="searchSt" />
+
 	
-	</select>
+	</select> 
+	
+	
+	<!-- 총 부서 갯수 출력 
+	<select id="allCount" parameterType="hashmap" resultType="int">
+		select count(n.notice_no) FROM notice n INNER JOIN site s ON n.site_code = s.site_code
+			INNER JOIN company c ON n.company_code = c.company_code
+			INNER JOIN member m ON n.member_id = m.member_id
+		
+	</select>-->
 
 	
 
 	<!-- 전체공지사항 상세보기 -->
-	<select parameterType="String" resultType="NoticeVO" id="noticeOne">
+	<select id="noticeOne" resultType="NoticeVO" parameterType="int">
 	SELECT 
 		n.notice_no ,
 		n.notice_title,
 		n.notice_content,
-		TO_CHAR(n.create_dete,'YYYY-MM-DD HH24:MM') AS noti_date_string,
+		TO_CHAR(n.create_dete,'YYYY-MM-DD HH24:MM') AS noticeDate,
 		n.member_id,
 		m.member_name,
 		n.company_code,
@@ -172,7 +199,7 @@
 		n.member_id = m.member_id AND 
 		n.company_code = c.company_code AND 
 		n.site_code = s.site_code AND 
-		n.notice_no = #{noticeNo} 
+		n.notice_no = #{notice_no} 
 	
 	</select>
 
@@ -187,14 +214,14 @@
                     create_date
                     ) 
                 values(
-                    auto_no.NEXTVAL,
+                    (SELECT NVL(MAX(notice_no), 0) + 1 FROM notice),
                     #{notice_title},
                     #{notice_content},
                    	#{member_id},
                     #{site_code},
                     #{company_code}
                     TO_DATE(#{create_date},'YYYY-MM-DD HH24:MI')
-                );
+                )
 	</insert>
 
 	<!-- 공지사항 조회수 증가 -->
@@ -208,19 +235,19 @@
 		</update>
 	
 		<!-- 공지사항 수정 -->
-		<update id="updateTotalNotice" parameterType="NoticeVO">
+		<update id="updateNotice" parameterType="NoticeVO">
 		UPDATE 
 			notice 
 		SET 
 			notice_title = #{noticeTitle},
 			notice_content = #{noticeContent}, 
-			update_date = now() 
+			update_date = TO_CHAR (#{create_date},'YYYY-MM-DD HH24:MM') 
 		WHERE 
 			notice_no = #{noticeNo}
 	</update>
 
 	<!-- 공지사항 삭제 -->
-	<delete id="deleteTotalNotice" parameterType="int"> 
+	<delete id="deleteNotice" parameterType="int"> 
 		DELETE FROM
 			notice
 		WHERE 

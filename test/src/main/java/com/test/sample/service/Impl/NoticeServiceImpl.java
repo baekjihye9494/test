@@ -46,19 +46,19 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public ArrayList<NoticeVO> list(HashMap<String, Object> info) {
-		logger.debug("리스트 호출 서비스 진입======");
-		logger.debug("권한"+info.get("AUTHORITY_TYPE"));
-		logger.debug(String.valueOf(info.get("company_code")));//소문자로 했더니 안나옴
-		logger.debug("아이디"+info.get("loginId"));
+		logger.info("리스트 호출 서비스 진입======");
+		logger.info("권한"+info.get("AUTHORITY_TYPE"));
+		logger.info(String.valueOf(info.get("company_code")));//소문자로 했더니 안나옴
+		logger.info("아이디"+info.get("loginId"));
 		return noticeMapper.list(info);
 	}
 	
 
 	//현장리스트
 	@Override
-	public ArrayList<SiteVO> site() {
+	public ArrayList<SiteVO> site(HashMap<String, Object> ahType) {
 		// TODO Auto-generated method stub
-		return noticeMapper.site();
+		return noticeMapper.site(ahType);
 	}
 
 	//업체리스트
@@ -77,15 +77,14 @@ public class NoticeServiceImpl implements NoticeService {
 
 	//상세보기
 	@Override
-	public NoticeVO selectTotalNoticeOne(int noticeNo) {
+	public NoticeVO noticeOne(int notice_no) {
+		logger.info("noticeOne 상세보기 서비스 진입===?");
+		logger.info("notice_no===>"+notice_no);
 		// TODO Auto-generated method stub
-		return noticeMapper.selectTotalNoticeOne(noticeNo);
+		return noticeMapper.noticeOne(notice_no);
 		
 	}
 
-	
-	
-	
 	
 	
 	

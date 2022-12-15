@@ -9,18 +9,22 @@
 <script type="text/javascript" src="resources/js/jquery.twbsPagination.js"></script>
 <link rel="stylesheet" href="resources/css/noticeList.css"/></head>
 <body>
-	<button onclick="logOut()">로그아웃</button>
-	<h1>공지사항 게시판</h1>
-
-		<div class="search-box">
-		<div class="search-line">
+	<div class= "contaienr">
+		<h1>공지사항 게시판</h1> 
+			<h3 class="card-title text-primary"> 
+				<text id="loginId"></text> 님 어서오세요!</h3>
+				<button class= "btn danger" style="float: right; margin-right:20px;"
+				onclick="logOut()">로그아웃</button>
+		</div>
 		
+		<div class="search-box">
+			<div class="search-line">
 			<div class="search-name">
 				<h5>정렬기준</h5>
 				<div class="input-group-prepend contents-selectBox">
 				<select class="custom-select" id="sorting">
-					<option value="create_date_asc" selected>최신순</option>
-					<option value="create_date_desc">오래된순</option>
+					<option value="create_date" selected>최신순</option>
+					<option value="update_date">오래된순</option>
 				</select>
 				</div>
 			</div>
@@ -48,22 +52,18 @@
 				<div class="input-group-prepend contents-selectBox">
 				<select class="custom-select" id="search_option">
 					<option value="">전체</option>
-					<option value="member_name">작성자</option>
-					<option value="notice_title">제목</option>
+					<option value="name">작성자</option>
+					<option value="title">제목</option>
 				</select>
 				<input type="text" id="search_keyword" placeholder="검색어를 입력하세요"/>
 				</div>
 			</div>
 			
 			<div class="search-btn">
-				<div class="btn_search" id="btn_search">
-					<span>검색</span>
-				</div>
+				<div class="btn success" id="btn_search">검색	</div>
 			</div>
-			<div>
-			 <div>
-			 	<button class="btn-write" onclick="location.href='write.html'">글쓰기</button>
-			 </div>
+			<div class="search-btn">			 
+				<button class="btn info" onclick="location.href='write.html'">글쓰기</button>
 			</div>
 		</div>
 	</div>
@@ -79,9 +79,10 @@
 				<th>제목</th>
 				<th>작성자</th>
 				<th>게시날짜</th>
+				<th>조회수</th>
 			</tr>
 		</thead>
-		<tbody id="noticeList">
+		<tbody id="noticeList"> <!-- js파일로 데이터 자동생성 넣어줄 곳 -->
 		</tbody>
 		<tr>
         <td colspan="7" id="paging">

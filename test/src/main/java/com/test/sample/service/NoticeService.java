@@ -25,7 +25,7 @@ public interface NoticeService {
 	ArrayList<NoticeVO> list(HashMap<String, Object> info);
 		
 	//현장리스트
-	ArrayList<SiteVO> site();
+	ArrayList<SiteVO> site(HashMap<String, Object> ahType);
 
 	//업체리스트
 	ArrayList<CompanyVO> company(HashMap<String, Object> ahType);
@@ -34,7 +34,7 @@ public interface NoticeService {
 	int allCount(HashMap<String, Object> info);
 
 	// 공지사항 상세보기
-	NoticeVO selectTotalNoticeOne(int noticeNo);
+	NoticeVO noticeOne(int notice_no);
 	
 	
 	
