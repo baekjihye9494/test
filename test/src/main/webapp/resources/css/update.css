@@ -15,7 +15,7 @@ table {
 
   /*버튼             수정!! auto -> 0 */
     .search-box .search-line > .search-btn {
-        margin-left: 0;s
+        margin-left: 0;
         width: auto;
     }
 

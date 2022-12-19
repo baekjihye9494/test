@@ -34,50 +34,17 @@ public interface NoticeMapper {
 	// 공지사항 상세보기
 	NoticeVO noticeOne(int noticeNo);
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// 공지사항 조회수
-	void updateTotalNoticeCount(int noticeNo);
+	void updateNoticeCount(int noticeNo);
 	
 	// 전체공지사항 추가
-	int addTotalNotice(NoticeVO Notice);
+	int addNotice(HashMap<String, Object> params);
 		
 	// 공지사항 수정
-	int updateTotalNotice(NoticeVO Notice);
+	int updateNotice(HashMap<String, Object> params);
 
 	//공지사항 삭제
-	int deleteTotalNotice(int noticeNo);
+	int deleteNotice(int noticeNo);
 	
 	
-	
-	
-	
-	/**
-	//현장별 게시판 조회 , 게시물 갯수
-	ArrayList<NoticeVO> selectBoardSt(HashMap<String, Object> map);
-	int countBoardSt(Map<String, Object> map);
-	
-	//업체별 게시판 조회 , 게시물 갯수
-	ArrayList<NoticeVO> selectBoardCp(HashMap<String, Object> map);
-	int countBoardCp(Map<String, Object> map);
-	
-	
-
-	// 현장전체리스트 / 내가 근무하는 현장
-	ArrayList<Map<String, Object>> stList();
-	ArrayList<Map<String, Object>> mySt(String loginId);
-
-	// 업체전체리스트 / 내가 근무하는 업체
-	ArrayList<Map<String, Object>> cpList();
-	ArrayList<Map<String, Object>> myCp(String loginId);
-
-
-**/
 }

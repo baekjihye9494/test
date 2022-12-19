@@ -83,7 +83,7 @@ public class NoticeController {
 		map.put("site", site);
 		map.put("company", company);
 		map.put("loginId", loginId);
-
+		map.put("ahType",ahType);
 	   
 	    return map;
 	}
@@ -169,6 +169,18 @@ public class NoticeController {
 		logger.info(loginId);
 		map.put("loginId", loginId);
 		//세션에 아이디값 담기
+		
+		//현장명 업체명 가져오기
+		HashMap<String, Object> ahType = noticeService.ahType(loginId);
+		ArrayList<SiteVO> site = noticeService.site(ahType);
+		ahType.put("loginId", loginId);
+		ArrayList<CompanyVO> company = noticeService.company(ahType);
+		map.put("site", site);
+		map.put("company", company);
+//		map.put("ath_gb", ahType.get("ATH_GB"));
+//		map.put("loginId_cp_code", ahType.get("CP_CODE")); //같은업체 수정을 위해
+//		map.put("loginId_name", memberInfo.get("MB_NAME"));
+		
 
 		map.put("notice_no",notice_no);
 		logger.info("공지 코드 >>> " + notice_no);
@@ -183,28 +195,56 @@ public class NoticeController {
 	
 	
 	
+	//조회수 올리기
 	
 	
 	
-	/*권한과 업체에 맞게 리스트 불러오기*/
+	
+	
+	
+	//addnotice
+	
+	@RequestMapping(value = "/add.ajax")
+	@ResponseBody
+	public HashMap<String, Object> addNotice(HttpSession session , 
+		@RequestParam HashMap<String, Object> params) {
+		
+		logger.info("insert 컨트롤러 진입======?");
+		String loginId = (String) session.getAttribute("loginId");
+		logger.info(loginId);
+		params.put("loginId", loginId);
+		//세션에 아이디값 담기
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		int notice = noticeService.addNotice(params);	
+
+		logger.info("params ======?");
+				
+		map.put("notice",notice);
+		logger.info("notice ======?");
+				
+		
+		return map;
+		
+		
+	}
+	
+	
+	
+	
+	//업데이트
 	@RequestMapping(value = "/update.ajax")
 	@ResponseBody
 	public HashMap<String, Object> updateNotice(HttpSession session,
-			@RequestParam int noticeNo,
 		@RequestParam HashMap<String, Object> params){
-		logger.info("수정 컨트롤러 진입======?");
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		String loginId = (String) session.getAttribute("loginId");
-		logger.info(loginId);
-		map.put("loginId", loginId);
+		logger.info("수정 컨트롤러 진입======?" + params);
 		
+		int modify = noticeService.updateNotice(params);
+		logger.info("수정값 서비스에 담았나? >>> " + modify);
 		
-		logger.info("공지 코드 >>> " + noticeNo);
-		NoticeVO noticeOne = noticeService.noticeOne(noticeNo);
+		map.put("modify",modify);
 		
-		logger.info("상세보기 확인 >>> " + noticeOne);
-		map.put("noticeOne",noticeOne);
 	    return map;
 	}
 	
@@ -212,21 +252,18 @@ public class NoticeController {
 	
 	
 	
-	/*권한과 업체에 맞게 리스트 불러오기*/
+	//삭제
 	@RequestMapping(value = "/delete.ajax")
 	@ResponseBody
 	public HashMap<String, Object> detelteNotice(HttpSession session,
-			@RequestParam int noticeNo,
-		@RequestParam HashMap<String, Object> params){
+			@RequestParam int notice_no){
 		logger.info("삭제 컨트롤러 진입======?");
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		String loginId = (String) session.getAttribute("loginId");
-		logger.info(loginId);
-		map.put("loginId", loginId);
-		
-		
-		
+		int remove =noticeService.deleteNotice(notice_no);
+		map.put("remove", remove);
+
+		logger.info("remove 값======?" + remove);
 		
 	    return map;
 	}

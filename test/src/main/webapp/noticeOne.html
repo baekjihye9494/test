@@ -4,46 +4,32 @@
 <meta charset="UTF-8">
 <title>상세보기</title>
 </head>
-<body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script> 
 <script type="text/javascript" src="resources/js/jquery.twbsPagination.js"></script>
 <link rel="stylesheet" href="resources/css/noticeOne.css"/></head>
-</body>
+<body>
 
-	<div class="row text-center">
-		<div class="card">
-			<h5 class="card-header">
-				<strong>전체공지상세보기</strong>
-			</h5>
-			
+	<div class="container">
+    <div class="row">
+	 	<h1>공지사항 상세보기</h1>	
+	 	<button class= "btn default" style="float: right; 
+					onclick="logOut()">로그아웃</button>
+	</div>
+	<div class="container">
 			<table>
 				<thead>
-					<tr>
-						<td>번호</td>
-						<td>제목</td>
-						<td>조회수</td>
-						<td>작성자</td>	
-					</tr>
-					<tr>
-						<td>등록일</td>
-						<td>현장명</td>
-						<td>업체명</td>
-					</tr>			
-					<tr>
-						<td>내용</td>	
-					</tr>
-				</thead>							
-				<tbody id="noticeOne"> <!-- js파일로 데이터 자동생성 넣어줄 곳 -->
-					
-				</tbody>
+					<tbody id="noticeOne"> <!-- js파일로 데이터 자동생성 넣어줄 곳 -->
+						
+					</tbody>
+				</thead>	
+				
 			</table>
-			<button class="btn success" id="mofify" type ="button">수정</button>
-			<button class="btn danger" id="remove" type ="button">삭제</button>
-			<button class="btn info" onclick="location.href='noticeList.html'"">목록</a>
+			<div  style=" text-align: center;" id ="detail">
+			</div>
 		</div>			
 	</div>
+</body>
 </html>
-
-<script src="resources/js/noticeOne.js"></script>
+<script src="resources/js/noticeOne.js?ver=1"></script>

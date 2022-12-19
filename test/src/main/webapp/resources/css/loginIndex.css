@@ -1,44 +1,39 @@
-@charset "UTF-8";
+* {box-sizing: border-box}
 
- table,th,td {
-        border : 1px solid black;
-        border-collapse : collapse;
-        text-align: center;
-    }
+/* Add padding to containers */
+.container {
+  padding: 16px;
+}
 
-    th, td {
-        padding : 5px 10px;
-    }
-    .container {
-	  border-radius: 50px;
-	  background-color: #f2f2f2;
-	  padding: center;
-	  text-align: center;
-      margin-bottom: 30px;
-      height: auto;
-	}
-    
-    
-    .btn {
-	  border: none; /* Remove borders */
-	  color: white; /* Add a text color */
-	  padding: 10px 16px; /* Add some padding */
-	  cursor: pointer; /* Add a pointer cursor on mouse-over */
-	  border-radius: 12px;
-	}
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
 
-	.success {background-color: #04AA6D; font-size: 12px;} /* Green */
-	.success:hover {background-color: #46a049;}
-	
-	.info {background-color: #2196F3; font-size: 12px;} /* Blue */
-	.info:hover {background: #0b7dda;}
-	
-	.warning {background-color: #ff9800; font-size: 12px;} /* Orange */
-	.warning:hover {background: #e68a00;}
-	
-	.danger {background-color: #f44336; font-size: 12px;} /* Red */
-	.danger:hover {background: #da190b;}
-	
-	.default {background-color: #e7e7e7; color: black; font-size: 12px;} /* Gray */
-	.default:hover {background: #ddd;}
-		 
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Overwrite default styles of hr */
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+/* Set a style for the submit/register button */
+.warning {
+  background-color: #ff9800; font-size: 7px;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+.warning:hover {background: #e68a00;}

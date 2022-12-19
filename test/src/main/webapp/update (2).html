@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>수정하기</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="resources/css/write.css"/>
+</head>
+<body>
+<h1>공지사항 게시판 수정</h1>
+	<div class="search-box">
+		<div class="search-line">
+			<div class="search-name">
+				<h5>현장명</h5>
+				<div class="input-group-prepend contents-selectBox">
+				<select class="custom-select" id="site_code">
+					<option value="">[--현장명--]</option>
+				</select>
+				</div>
+			</div>
+			
+			<div class="search-name">
+				<h5>업체명</h5>
+				<div class="input-group-prepend contents-selectBox">
+				<select class="custom-select" id="cp_code">
+					<option value="">[--업체명--]</option>
+				</select>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<table>
+	<tr>
+		<th>제목</th>
+		<td><input type="text" id="noti_subject" placeholder="제목을 입력하세요" style="border-style: none; outline: none 0px; width: 100% "/> </td>
+	</tr>
+	<tr>
+		<th>내용</th>
+		<td><textarea id="noti_content"></textarea></td>
+	</tr>
+	<tr>
+		<th>
+			<span class="notiInfo">숨김처리</span>
+		</th>
+		<td>
+			<input type="radio" name="openType" value="Y" checked/>공개 
+			<input type="radio" name="openType" value="N"/>비공개
+		</td>
+	</tr>
+	<tr>
+		<th>
+			<span id="upload" class="notiInfo">업로드</span>
+		</th>
+		<td>
+			<span class="uploadTime" id="currentUpload">현재</span>
+			<span class="uploadTime" id="resUpload">예약</span>
+			<input type="date" class="resTime" name="noti_date" />
+			<input type="time" class="resTime" />
+		</td>
+	</tr>
+</table>
+<div class="btn-box"> 
+	<button onclick="location.href='/noticeList.html'">취소</button>
+	<button onclick="noticeUpdate()">완료</button>
+</div>
+</body>
+</html>
+<script src="resources/js/update.js?ver=1"></script>

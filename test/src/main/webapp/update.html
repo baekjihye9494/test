@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>게시글 수정</title>
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="resources/js/jquery.twbsPagination.js"></script>
+<link rel="stylesheet" href="resources/css/update.css"/></head>
+</body>
+
+<div class="container">
+    <div class="row">
+	 	<h1>공지사항 수정</h1>	
+	 	<button class= "btn default" style="float: right; 
+					onclick="logOut()">로그아웃</button>
+	</div>
+	<div class="search-box">
+		<div class="search-line">
+		 	<div class="search-name">
+				<h5>현장명</h5>
+				<div class="input-group-prepend contents-selectBox">
+					<select class="custom-select" id="site_code">
+						<option value="">전체</option>
+					</select>
+				</div>
+			</div>
+			<div class="search-name">
+				<h5>업체명</h5>
+				<div class="input-group-prepend contents-selectBox">
+					<select class="custom-select" id="company_code">
+						<option value="">전체</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+    <table>
+    	<tbody id="detailModify">
+    	
+    	</tbody>
+    </table>
+<br>
+<div style=" text-align: center;" id ="btn"> 
+	
+</div>
+</body>
+</html>
+<script src="resources/js/update.js?ver=1"></script>

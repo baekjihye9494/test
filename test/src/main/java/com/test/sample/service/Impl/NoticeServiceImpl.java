@@ -84,33 +84,32 @@ public class NoticeServiceImpl implements NoticeService {
 		return noticeMapper.noticeOne(notice_no);
 		
 	}
-
 	
-	
-	
-	
+	//조회수
 	@Override
-	public void updateTotalNoticeCount(int noticeNo) {
+	public void updateNoticeCount(int notice_no) {
 		// TODO Auto-generated method stub
-		
+		noticeMapper.updateNoticeCount(notice_no);
 	}
 	
+	//추가
 	@Override
-	public int addTotalNotice(NoticeVO Notice) {
+	public int addNotice(HashMap<String, Object> params) {
 		// TODO Auto-generated method stub
-		return 0;
+		return noticeMapper.addNotice(params);
 	}
 
 	@Override
-	public int updateTotalNotice(NoticeVO Notice) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateNotice(HashMap<String, Object> params) {
+		logger.info("updateNotice 서비스 진입===?");
+		logger.info("params===>"+params);
+		return noticeMapper.updateNotice(params);
 	}
 
 	@Override
-	public int deleteTotalNotice(int noticeNo) {
+	public int deleteNotice(int notice_no) {
 		// TODO Auto-generated method stub
-		return 0;
+		return noticeMapper.deleteNotice(notice_no);
 	}
 	
 	

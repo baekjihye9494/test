@@ -2,61 +2,35 @@
  * 
  */
 
+function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+      return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+ 
+
+var patId = getParameterByName('notice_no'); 
+console.log(patId);
+
  $(document).ready(function(){
 
- 	 var notice_no = $('#notice_no').val();
- 	 
- 	 detailCall(notice_no);
+ 	
 	 $.ajax({
 	 		type:'get',
 	 		url:"notice/detail.ajax",
 	 		data:{
-	 			'notice_no' : notice_no,
-	 			'noticeOne' : noticeOne
+	 			'notice_no' : patId
 	 		},
 	 		dataType: 'JSON',
 	 		success: function(data){
-
-				 consol.log(data.noticeNo);
-	 			 consol.log(data.noticeOne);
+	 			drawList(data.detail);
 	 			//drawList(data.noticeNo);
 	 		}
 	 })
  });
  
- function detailCall(detail){ //map.put("detail",detail);에 담은 이름 불러주기
- 	 
-	 var content = "";
-
-		
-		if(noticeOne.length > 0){ //맵퍼noticeOne 이름 부르기
-			//리스트의 갯수?까지 계산 한 값이 > 0 보다 크면
-			noticeOne.forEach(function(item,idx){
-				//리스트 for문 돌려서 리스트를 호출
-				var createDate = new Date(item.createDate);//오라클에서 타입을 date로 했으면 sql데이트타입을 선언해서 가져와야함
-				console.log(item);
-				content += '<tr>';
-				content += '<td>'+item.noticeNo+'</td>';
-				content += '<td>'+item.siteName+'</td>';
-				content += '<td>'+item.companyName+'</td>';
-				content += '<td><a href="noticeOne.html?notice_no='+item.noticeNo+'">';
-				content += item.noticeTitle+'</a></td>';
-				content += '<td>'+item.memberName+'</td>';
-				content += '<td>'+createDate.toLocaleDateString("ko-KR")+'</td>';
-				//데이트타입으로 선언된 변수명+toLocaleDateString("ko-KR") 써줘야 한글로? 인식하고 변환돼서 나옴
-				content += '<td>'+item.views+'</td>';
-				content += '</tr>';	
-			});
-		}else{
-			content += '<td colspan="6" style="text-align:center">작성된 공지가 없습니다. </td>';
-		}
-		
-		$("#noticeOne").empty();
-		$("#noticeOne").append(content);
-	};
-
-
-
  function logOut(){
 	 $.ajax({
 			type:'get',
@@ -64,7 +38,7 @@
 			data:{},
 			dataType: 'JSON',
 			success: function(data){
-			alert("로그아웃 되었습니다.");
+			confirm("로그아웃 하시겠습니까?");
 			location.href="/loginIndex.html";
 				
 			},
@@ -73,71 +47,80 @@
 			}
 		});
  }
-
-
-
-$('#modify').on("click",function(){
-	if($('#notice_no').val() != ""){
-		location.href="/updateNotice.html?=notice_no"+$('#notice_no').val();
-	}else{
-		alert("수정 할 수 없습니다.");
-	}
-});
  
+ function drawList(detail){ //map.put("detail",detail);에 담은 이름 불러주기
+ 	 
+	 var content = ""; 
+	 var btnContent = "";
 
-
- /**
- function modify(noticeNo) {
- 	
- 	
- 	 $.ajax({
- 			type:'get',
- 			url:"notice/update.ajax",
- 			data:{},
- 			dataType: 'JSON',
- 			success: function(data){
- 				console.log(data.noticeOne);
- 				
- 				var chk = confirm("수정하시겠습니까?");
- 				
- 				if (chk) {
- 					if(noticeOne.length > 0){
- 						//리스트의 갯수?까지 계산 한 값이 > 0 보다 크면
- 						noticeOne.forEach(function(item,idx){
- 					
-							location.href='updateNotice.html?=noticeNo'+item.noticeNo;
- 						});
- 					}
- 				}else {
- 					location.href='noticeList.html';
- 				}
- 			},
- 			error:function(e){
-		 		console.log(e);
-			}
- 	});	
- };
-
-function remove(noticeNo) {
-	
-	
-	 $.ajax({
-			type:'post',
-			url:"notice/delete.ajax",
-			data:{},
-			dataType: 'JSON',
-			success: function(data){
-				console.log(data.loginId);
+			//리스트 for문 돌려서 리스트를 호출
+				console.log(detail);
+				//	var createDate = new Date(detail.createDate);//오라클에서 타입을 date로 했으면 sql데이트타입을 선언해서 가져와야함
+				content += '<tr>';
+				content += '<td>번호</td>';
+				content += '<td>'+detail.noticeNo+'</td>';
+				content += '<td>제목</td>';
+				content += '<td colspan="2">'+detail.noticeTitle+'</td>';
+				content += '<td>조회수</td>';
+				content += '<td>'+detail.views+'</td>';
+				content += '<td>작성자</td>';
+				content += '<td>'+detail.memberName+'</td>';
+				content += '</tr>';
+				content += '<tr>';
+				content += '<td>등록일</td>';
+				content += '<td>'+detail.noticeDate+'</td>';
+				//content += '<td>'+createDate.toLocaleDateString("ko-KR")+'</td>';
+				content += '<td>현장명</td>';
+				content += '<td colspan="4">'+detail.siteName+'</td>';
+				content += '<td>업체명</td>';
+				content += '<td>'+detail.companyName+'</td>';
+				content += '</tr>';
+				content += '<tr>';
+				content += '<td colspan="2">내용</td>';
+				content += '<td colspan="8"><textarea  style="height:200px" background-color: #fff;" class= "form-control" readonly="readonly">'
+					+detail.noticeContent+'</textarea></td>';
+				content += '</tr>';
 				
-				var chk = confirm("정말 삭제하시겠습니까?");
+				btnContent+= '<button style=" display: inline-block;" class="btn success" onclick="location.href=\'update.html?notice_no='+patId+'\'">수정</button>';
+				btnContent+= '<button style=" display: inline-block;" class="btn danger" onclick="remove('+patId+')">삭제</button>';
+				btnContent+= '<button style=" display: inline-block;" class="btn info" onclick="location.href=\'noticeList.html\'">목록</a>';				
 				
-				if (chk) {
-					location.href='deleteNotice.html?noticeNo='+noticeNo;
+		
+		$("#noticeOne").empty();
+		$("#noticeOne").append(content);
+		
+		$("#detail").empty();
+		$("#detail").append(btnContent);
+		
+		
+	};
+
+
+
+
+ 	 
+
+function remove(notice_no) {
+	
+		if(confirm("정말 삭제하시겠습니까?")){
+			$.ajax({
+				type:'get',
+				url:"notice/delete.ajax",
+				data:{
+					'notice_no' : notice_no
+					},
+				dataType: 'JSON',
+				success: function(data){
+					console.log(data.remove);
+				
+				if (data.remove > 0) {
+					location.href='noticeList.html';
+					alort("게시글이 삭제되었습니다!");
 				}	
 			},
 			error:function(e){
 				console.log(e);
 			}
-	});	
-};
-**/
+		});	
+	};
+}

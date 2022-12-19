@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<title>상세보기</title>
+<link rel="stylesheet" href="resources/css/detail.css"/>
+</head>
+<body>
+<h1>공지사항 상세보기</h1>
+<table id="detailTable">
+</table>
+
+
+<div class="btn-box"> 
+	<button onclick="location.href='/noticeList.html'">목록</button>
+</div>
+
+<div class="row">
+	<div class="col-lg-6" style="margin:0 auto;">
+		<div class="comment-box" style="width:50%; display:inline-block; margin:0 auto;">
+			<div class="comment-form">
+				<textarea  id="cmtInput" placeholder="댓글을 작성하세요." ></textarea>
+				<button type="button" class="submit" id="cmtWrite">댓글 쓰기</button>
+			</div>
+			<br/>
+			<div id="cmtList">
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
+<script src="resources/js/detail.js?ver=1"></script>
+<script src="resources/js/cmt.js?ver=1"></script>
